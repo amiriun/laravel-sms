@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Iranian sms,sms,kavenegar",
     "keywords": ["mail","mailer","email"],
-    "homepage": "https://swiftmailer.symfony.com",
+    "homepage": "https://github.com/amiriun/laravel-sms/",
     "license": "MIT",
     "authors": [
         {
