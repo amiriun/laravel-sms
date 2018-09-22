@@ -29,32 +29,13 @@ class SMSChannel
         if (! $to = $notifiable->routeNotificationFor('toSms')) {
             return;
         }
-
-        $message = $notification->toSms($notifiable);
-
-//        if (is_string($message)) {
-//            $message = new NexmoMessage($message);
-//        }
-
-        $getDTO = $this->prepareDTO($to, $message);
+        /**
+         * @var SendSMSDTO
+         */
+        $getDTO = $notification->toSms($notifiable);
+        $getDTO->to = $to;
 
         $this->smsService->send($getDTO);
-    }
-
-    /**
-     * @param $to
-     * @param $message
-     *
-     * @return SendSMSDTO
-     */
-    private function prepareDTO($to, $message)
-    {
-        $DTO = new SendSMSDTO();
-        $DTO->from = 'xxxx';
-        $DTO->to = $to;
-        $DTO->text = $message;
-
-        return $DTO;
     }
 
 }

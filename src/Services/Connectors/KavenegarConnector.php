@@ -32,7 +32,7 @@ class KavenegarConnector implements SMSConnectorInterface
             [
                 'form_params' => [
                     'receptor' => $DTO->to,
-                    'message'  => $DTO->text,
+                    'message'  => $DTO->message,
                     'sender'   => $this->getSenderNumber($DTO->from)
                 ],
                 'headers'     => [
