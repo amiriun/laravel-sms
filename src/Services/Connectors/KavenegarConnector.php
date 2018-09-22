@@ -17,10 +17,15 @@ class KavenegarConnector implements SMSConnectorInterface
         $this->client = $client;
     }
 
+    /**
+     * @param SendSMSDTO $DTO
+     *
+     * @return SentSMSOutputDTO
+     */
     public function send(SendSMSDTO $DTO)
     {
         $apiKey = config('sms.kavenegar.api_key');
-        $response = $this->client->post(
+        $response = $this->client->request('POST',
             "https://api.kavenegar.com/v1/$apiKey/sms/send.json",
             [
                 'form_params' => [
@@ -40,14 +45,14 @@ class KavenegarConnector implements SMSConnectorInterface
     /**
      * @param $res
      *
-     * @return mixed
+     * @return SentSMSOutputDTO
      */
     private function getResponseDTO($res)
     {
         $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
-        $outputDTO->status = $responseArray['entries'][0]['status'];
-        $outputDTO->messageId = $responseArray['entries'][0]['messageid'];
+        $outputDTO->status = $responseArray->entries[0]->status;
+        $outputDTO->messageId = $responseArray->entries[0]->messageid;
 
         return $outputDTO;
 
