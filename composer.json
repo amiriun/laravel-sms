@@ -5,6 +5,8 @@
     "keywords": ["mail","mailer","email"],
     "homepage": "https://github.com/amiriun/laravel-sms/",
     "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Amir Alian"
