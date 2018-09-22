@@ -1,0 +1,36 @@
+{
+    "name": "amiriun/sms",
+    "type": "library",
+    "description": "Iranian sms,sms,kavenegar",
+    "keywords": ["mail","mailer","email"],
+    "homepage": "https://swiftmailer.symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amir Alian"
+        },
+        {
+            "name": "Amir Alian",
+            "email": "amircup2006@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "files": ["lib/swift_required.php"]
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Swift_": "tests/unit"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.4-dev"
+        }
+    }
+}
