@@ -6,13 +6,13 @@ namespace Amiriun\SMS\Services\Connectors;
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 class KavenegarConnector implements SMSConnectorInterface
 {
     private $client;
 
-    public function __construct(Client $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
@@ -21,17 +21,19 @@ class KavenegarConnector implements SMSConnectorInterface
      * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function send(SendSMSDTO $DTO)
     {
         $apiKey = config('sms.kavenegar.api_key');
-        $response = $this->client->request('POST',
+        $response = $this->client->request(
+            'POST',
             "https://api.kavenegar.com/v1/$apiKey/sms/send.json",
             [
                 'form_params' => [
                     'receptor' => $DTO->to,
                     'message'  => $DTO->text,
-                    'sender' => $this->getSenderNumber($DTO)
+                    'sender'   => $this->getSenderNumber($DTO->from)
                 ],
                 'headers'     => [
                     'Content-Type' => 'application/x-www-form-urlencoded'
@@ -63,11 +65,12 @@ class KavenegarConnector implements SMSConnectorInterface
      *
      * @return mixed
      */
-    private function getSenderNumber(SendSMSDTO $DTO)
+    private function getSenderNumber($senderNumber)
     {
-        if(is_null($DTO->from)){
+        if (is_null($senderNumber)) {
             return config('sms.kavenegar.numbers.0');
         }
-        return $DTO->from;
+
+        return $senderNumber;
     }
 }
