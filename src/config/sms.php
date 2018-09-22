@@ -11,16 +11,16 @@ return [
     | supported: debug , kavenegar
     |
     */
-    'default_gateway' => 'debug',
+    'default_gateway' => env('SMS_GATEWAY','debug'),
 
     'kavenegar' => [
-        'api_key' => 'YOUR_API_KEY',
+        'api_key' => env('KAVENEGAR_API_KEY','YOUR_API_KEY'),
         'numbers' => [
             'YOUR_NUMBERS',
         ],
     ],
     'mellipayamak' => [
-        'api_key' => 'YOUR_API_KEY',
+        'api_key' => env('MELLIPAYAMAK_API_KEY','YOUR_API_KEY'),
         'numbers' => [
             'YOUR_NUMBERS',
         ],
