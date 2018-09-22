@@ -14,21 +14,15 @@ return [
     'default_gateway' => 'debug',
 
     'kavenegar' => [
-        'api_key' => '',
+        'api_key' => 'YOUR_API_KEY',
         'numbers' => [
-            '20003000',
-            '20003001',
-            '20003002',
-            '20003003',
+            'YOUR_NUMBERS',
         ],
     ],
     'mellipayamak' => [
-        'api_key' => '',
+        'api_key' => 'YOUR_API_KEY',
         'numbers' => [
-            '20003000',
-            '20003001',
-            '20003002',
-            '20003003',
+            'YOUR_NUMBERS',
         ],
     ],
 

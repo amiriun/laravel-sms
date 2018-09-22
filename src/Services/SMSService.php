@@ -17,7 +17,7 @@ class SMSService
 
     public function send(SendSMSDTO $DTO)
     {
-
+        $this->connector->send($DTO);
     }
 
     public function receive($mobile, $text)

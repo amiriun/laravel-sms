@@ -15,7 +15,10 @@ class SMSServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
+        $this->publishes([
+            __DIR__.'/config/sms.php' => config_path('sms.php'),
+        ]);
     }
 
     /**
@@ -25,6 +28,14 @@ class SMSServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(SMSConnectorInterface::class,KavenegarConnector::class);
+        $this->app->bind(SMSConnectorInterface::class,$this->getConnectorInstance());
+    }
+
+    private function getConnectorInstance()
+    {
+        $defaultGateway = config('sms.default_gateway');
+        $gatewaysArray = config('sms.map_gateway_to_connector');
+
+        return $gatewaysArray[$defaultGateway];
     }
 }
