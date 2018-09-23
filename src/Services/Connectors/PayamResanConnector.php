@@ -10,6 +10,13 @@ use GuzzleHttp\ClientInterface;
 
 class PayamResanConnector implements SMSConnectorInterface
 {
+    private $client;
+
+    public function __construct()
+    {
+        $this->client =  app('PayamResanClient');
+    }
+
     /**
      * @param SendSMSDTO $DTO
      *
@@ -19,27 +26,11 @@ class PayamResanConnector implements SMSConnectorInterface
      */
     public function send(SendSMSDTO $DTO)
     {
-        try {
-            $client = new \SoapClient('http://sms-webservice.ir/v1/v1.asmx?WSDL');
+        $parameters = $this->setParameters($DTO);
+        $this->checkCredit($parameters);
+        $messageResult = $this->sendMessage($parameters);
 
-            $parameters['Username'] = config('sms.payamresan.username');
-            $parameters['PassWord'] = config('sms.payamresan.password');
-            $parameters['SenderNumber'] = $this->getSenderNumber($DTO->from);
-            $parameters['RecipientNumbers'] = [$DTO->to];
-            $parameters['MessageBodie'] = $DTO->message;
-            $parameters['Type'] = 1;
-            $parameters['AllowedDelay'] = 0;
-
-            $res = $client->GetCredit($parameters);
-            echo $res->GeCreditResult;
-            $res = $client->SendMessage($parameters);
-            foreach ($res->SendMessageResult as $r)
-                echo $r;
-        } catch (\SoapFault $ex) {
-            echo $ex->faultstring;
-        }
-
-        return $this->getResponseDTO($response);
+        return $this->getResponseDTO($messageResult->SendMessageResult->long);
     }
 
     /**
@@ -47,15 +38,13 @@ class PayamResanConnector implements SMSConnectorInterface
      *
      * @return SentSMSOutputDTO
      */
-    private function getResponseDTO($res)
+    private function getResponseDTO($resultCode)
     {
-        $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
-        $outputDTO->status = $responseArray->ErrorCode;
-        $outputDTO->messageId = $responseArray->MessageId;
+        $outputDTO->status = 1;
+        $outputDTO->messageId = $resultCode;
 
         return $outputDTO;
-
     }
 
     /**
@@ -70,5 +59,59 @@ class PayamResanConnector implements SMSConnectorInterface
         }
 
         return $senderNumber;
+    }
+
+    /**
+     * @param SendSMSDTO $DTO
+     * @param            $parameters
+     *
+     * @return mixed
+     */
+    private function setParameters(SendSMSDTO $DTO)
+    {
+        $parameters['Username'] = config('sms.payamresan.username');
+        $parameters['PassWord'] = config('sms.payamresan.password');
+        $parameters['SenderNumber'] = $this->getSenderNumber($DTO->from);
+        $parameters['RecipientNumbers'] = [$DTO->to];
+        $parameters['MessageBodie'] = $DTO->message;
+        $parameters['Type'] = 1;
+        $parameters['AllowedDelay'] = 0;
+
+        return $parameters;
+    }
+
+    /**
+     * @param $parameters
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function checkCredit($parameters)
+    {
+        $response = $this->client->GeCredit($parameters);
+        if ($response->GeCreditResult == '-1') {
+            throw new \Exception('Your credential username or password is invalid.');
+        }
+        if ($response->GeCreditResult < 0) {
+            throw new \Exception('You have not enough credit.');
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param $parameters
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function sendMessage($parameters)
+    {
+        $response = $this->client->SendMessage($parameters);
+        if ($response->SendMessageResult->long < 0) {
+            throw new \Exception('The message can not be send.');
+        }
+
+        return $response;
     }
 }
