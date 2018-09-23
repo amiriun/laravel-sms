@@ -2,6 +2,8 @@
 
 namespace Amiriun\SMS;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\ServiceProvider;
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
 use Amiriun\SMS\Services\Connectors\KavenegarConnector;
@@ -28,6 +30,7 @@ class SMSServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(ClientInterface::class,Client::class);
         $this->app->bind(SMSConnectorInterface::class,$this->getConnectorInstance());
     }
 

@@ -82,7 +82,7 @@ class SmsIrConnector implements SMSConnectorInterface
         );
         $responseObject = json_decode((string)$tokenResponse->getBody());
         if(!$responseObject->IsSuccessful){
-            throw new \Exception($responseObject->Message);
+            throw new \Exception('Poblem on Sms.ir Response: '.$responseObject->Message);
         }
 
         return $responseObject->TokenKey;
