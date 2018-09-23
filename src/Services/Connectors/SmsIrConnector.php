@@ -32,7 +32,7 @@ class SmsIrConnector implements SMSConnectorInterface
             [
                 'form_params' => [
                     'Message'  => $DTO->message,
-                    'MobileNumbers' => [$DTO->to],
+                    'MobileNumberspsr4 autoloader to composer' => [$DTO->to],
                     'CanContinueInCaseOfError'   => true,
                 ],
                 'headers'     => [
