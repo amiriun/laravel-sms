@@ -1,15 +1,23 @@
-# Iranian Laravel SMS Gateways
+# Iranian Laravel SMS Gateways ( integrate with laravel notification )
 
 
 Laravel SMS include **The popular Iranian SMS gateways** library providing an easier way to send sms from any gateway you want or switch between them.
 
+
+## Supported sms gateways:
+- [Kavenegar](http://kavenegar.com/)
+- [SMS.ir](http://sms.ir/)
+- [Payam Resan](http://payam-resan.com/)
+- [Melli Payamak](https://www.melipayamak.com/) (**soon**)
+- **Debug** ( Dont send sms to end users , just log it to laravel.log )
+
 ## Requirements
 
-PHP >=5.4
+- PHP >=5.4
+- PHP SoapClient Extension (***just for payamresan gateway***)
 
 ## Prerequisites
 
-- PHP >=5.6
 - Laravel >=5.2
 
 ```
