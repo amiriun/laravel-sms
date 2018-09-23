@@ -8,7 +8,7 @@ return [
     |
     | When your application is in debug mode, sms messages should not be send to endusers.
     | for handle this issue you can use "debug" gateway to log messages instead of send to users.
-    | supported: debug , kavenegar
+    | supported: debug , kavenegar, sms_ir
     |
     */
     'default_gateway' => env('SMS_GATEWAY', 'debug'),
