@@ -36,5 +36,6 @@ return [
     'map_gateway_to_connector' => [
         'debug'     => \Amiriun\SMS\Services\Connectors\DebugConnector::class,
         'kavenegar' => \Amiriun\SMS\Services\Connectors\KavenegarConnector::class,
+        'sms_ir' => \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
     ],
 ];
