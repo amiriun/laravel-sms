@@ -26,7 +26,7 @@ class SMSChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (! $to = $notifiable->routeNotificationFor('toSms')) {
+        if (! $to = $notifiable->routeNotificationFor('sms')) {
             return;
         }
         /**
