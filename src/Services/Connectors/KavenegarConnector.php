@@ -33,7 +33,7 @@ class KavenegarConnector extends AbstractConnector implements SMSConnectorInterf
                 'form_params' => [
                     'receptor' => $DTO->to,
                     'message'  => $DTO->message,
-                    'sender'   => $this->getSenderNumber($DTO->from)
+                    'sender'   => $this->getSenderNumber($DTO->senderNumber)
                 ],
                 'headers'     => [
                     'Content-Type' => 'application/x-www-form-urlencoded'
