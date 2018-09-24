@@ -14,7 +14,7 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
 
     public function __construct()
     {
-        $this->client =  app('PayamResanClient');
+        $this->client = app('PayamResanClient');
     }
 
     /**
@@ -30,7 +30,7 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
         $this->checkCredit($parameters);
         $messageResult = $this->sendMessage($parameters);
 
-        return $this->getResponseDTO($messageResult->SendMessageResult->long);
+        return $this->getResponseDTO($messageResult->SendMessageResult->long, $DTO);
     }
 
     /**
@@ -40,7 +40,12 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
      */
     public function getSystemStatus($statusCode)
     {
-        // TODO: Implement getSystemStatus() method.
+        if ($statusCode > 0) {
+            return self::SENT;
+        }
+        $statusArray = $this->getStatuseArray();
+
+        return $statusArray[$statusCode];
     }
 
     /**
@@ -50,7 +55,9 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
      */
     public function getSystemMessage($systemStatus)
     {
-        // TODO: Implement getSystemMessage() method.
+        $messagesArray = $this->getStatusMessageArray();
+
+        return $messagesArray[$systemStatus];
     }
 
     /**
@@ -63,7 +70,7 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
     {
         $parameters['Username'] = config('sms.payamresan.username');
         $parameters['PassWord'] = config('sms.payamresan.password');
-        $parameters['SenderNumber'] = $this->getSenderNumber($DTO->from);
+        $parameters['SenderNumber'] = $this->getSenderNumber($DTO->senderNumber);
         $parameters['RecipientNumbers'] = [$DTO->to];
         $parameters['MessageBodie'] = $DTO->message;
         $parameters['Type'] = 1;
@@ -122,16 +129,61 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
     }
 
     /**
-     * @param $res
+     * @param            $resultCode
+     * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
      */
-    private function getResponseDTO($resultCode)
+    private function getResponseDTO($resultCode, SendSMSDTO $DTO)
     {
         $outputDTO = new SentSMSOutputDTO();
-        $outputDTO->status = 1;
+        $outputDTO->status = $this->getSystemStatus($resultCode);
+        $outputDTO->messageResult = $this->getSystemMessage($outputDTO->status);
+        $outputDTO->senderNumber = $this->getSenderNumber($DTO->senderNumber);
+        $outputDTO->to = $DTO->to;
         $outputDTO->messageId = $resultCode;
 
         return $outputDTO;
+    }
+
+    /**
+     * @return array
+     */
+    private function getStatuseArray()
+    {
+        return [
+            -1  => self::AUTH_PROBLEM,
+            -2  => self::AUTH_PROBLEM,
+            -3  => self::FAILED,
+            -4  => self::FAILED,
+            -5  => self::FAILED,
+            -6  => self::FAILED,
+            -7  => self::FAILED,
+            -8  => self::FAILED,
+            -9  => self::FAILED,
+            -10 => self::FAILED,
+            -11 => self::FAILED,
+            -12 => self::AUTH_PROBLEM,
+            -13 => self::AUTH_PROBLEM,
+            -14 => self::AUTH_PROBLEM,
+            -15 => self::FAILED,
+            -16 => self::FAILED,
+            -18 => self::FAILED,
+            -19 => self::FAILED,
+            -20 => self::FAILED,
+            -21 => self::FAILED,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getStatusMessageArray()
+    {
+        return [
+            self::AUTH_PROBLEM => 'مشکلی در احراز هویت شما وجود دارد',
+            self::FAILED       => 'مشکل در ارسال پیامک',
+            self::SENT         => 'ارسال شده',
+        ];
     }
 }

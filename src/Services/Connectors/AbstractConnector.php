@@ -2,7 +2,7 @@
 namespace Amiriun\SMS\Services\Connectors;
 
 
-class AbstractConnector
+abstract class AbstractConnector
 {
     const QUEUED = 'queued';
     const SCHEDULED = 'scheduled';
@@ -13,5 +13,6 @@ class AbstractConnector
     const CANCELED = 'canceled';
     const BLOCKED = 'blocked';
     const INVALID = 'invalid';
+    const AUTH_PROBLEM = 'auth_problem';
 
 }

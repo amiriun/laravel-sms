@@ -6,7 +6,7 @@ namespace Amiriun\SMS\DataContracts;
 class SendSMSDTO
 {
     public $to;
-    public $from;
+    public $senderNumber;
     public $message;
 
     public function setTo($value)
@@ -16,9 +16,9 @@ class SendSMSDTO
         return $this;
     }
 
-    public function setFrom($value)
+    public function setSenderNumber($value)
     {
-        $this->from = $value;
+        $this->senderNumber = $value;
 
         return $this;
     }
