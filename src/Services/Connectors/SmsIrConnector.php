@@ -8,7 +8,7 @@ use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use GuzzleHttp\ClientInterface;
 
-class SmsIrConnector implements SMSConnectorInterface
+class SmsIrConnector extends AbstractConnector implements SMSConnectorInterface
 {
     private $client;
 
@@ -43,6 +43,26 @@ class SmsIrConnector implements SMSConnectorInterface
         );
 
         return $this->getResponseDTO($response);
+    }
+
+    /**
+     * @param int $statusCode
+     *
+     * @return string
+     */
+    public function getSystemStatus($statusCode)
+    {
+        // TODO: Implement getSystemStatus() method.
+    }
+
+    /**
+     * @param string $systemStatus
+     *
+     * @return string
+     */
+    public function getSystemMessage($systemStatus)
+    {
+        // TODO: Implement getSystemMessage() method.
     }
 
     /**

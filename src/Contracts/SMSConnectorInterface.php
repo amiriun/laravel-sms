@@ -13,4 +13,18 @@ interface SMSConnectorInterface
      * @return SentSMSOutputDTO
      */
     public function send(SendSMSDTO $DTO);
+
+    /**
+     * @param int $statusCode
+     *
+     * @return string
+     */
+    public function getSystemStatus($statusCode);
+
+    /**
+     * @param string $systemStatus
+     *
+     * @return string
+     */
+    public function getSystemMessage($systemStatus);
 }

@@ -6,4 +6,6 @@ class SentSMSOutputDTO
 {
     public $messageId;
     public $status;
+    public $senderNumber;
+
 }

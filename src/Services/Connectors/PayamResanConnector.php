@@ -8,7 +8,7 @@ use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use GuzzleHttp\ClientInterface;
 
-class PayamResanConnector implements SMSConnectorInterface
+class PayamResanConnector extends AbstractConnector implements SMSConnectorInterface
 {
     private $client;
 
@@ -34,31 +34,23 @@ class PayamResanConnector implements SMSConnectorInterface
     }
 
     /**
-     * @param $res
-     *
-     * @return SentSMSOutputDTO
-     */
-    private function getResponseDTO($resultCode)
-    {
-        $outputDTO = new SentSMSOutputDTO();
-        $outputDTO->status = 1;
-        $outputDTO->messageId = $resultCode;
-
-        return $outputDTO;
-    }
-
-    /**
-     * @param string $senderNumber
+     * @param int $statusCode
      *
      * @return string
      */
-    private function getSenderNumber($senderNumber)
+    public function getSystemStatus($statusCode)
     {
-        if (is_null($senderNumber)) {
-            return config('sms.payamresan.numbers.0');
-        }
+        // TODO: Implement getSystemStatus() method.
+    }
 
-        return $senderNumber;
+    /**
+     * @param string $systemStatus
+     *
+     * @return string
+     */
+    public function getSystemMessage($systemStatus)
+    {
+        // TODO: Implement getSystemMessage() method.
     }
 
     /**
@@ -78,6 +70,20 @@ class PayamResanConnector implements SMSConnectorInterface
         $parameters['AllowedDelay'] = 0;
 
         return $parameters;
+    }
+
+    /**
+     * @param string $senderNumber
+     *
+     * @return string
+     */
+    private function getSenderNumber($senderNumber)
+    {
+        if (is_null($senderNumber)) {
+            return config('sms.payamresan.numbers.0');
+        }
+
+        return $senderNumber;
     }
 
     /**
@@ -113,5 +119,19 @@ class PayamResanConnector implements SMSConnectorInterface
         }
 
         return $response;
+    }
+
+    /**
+     * @param $res
+     *
+     * @return SentSMSOutputDTO
+     */
+    private function getResponseDTO($resultCode)
+    {
+        $outputDTO = new SentSMSOutputDTO();
+        $outputDTO->status = 1;
+        $outputDTO->messageId = $resultCode;
+
+        return $outputDTO;
     }
 }
