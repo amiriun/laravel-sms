@@ -4,11 +4,12 @@ namespace Amiriun\SMS\Services\Connectors;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use GuzzleHttp\ClientInterface;
 
-class PayamResanConnector extends AbstractConnector implements SMSConnectorInterface
+class PayamResanConnector extends AbstractConnector
 {
     private $client;
 
@@ -41,7 +42,7 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
     public function getSystemStatus($statusCode)
     {
         if ($statusCode > 0) {
-            return self::SENT;
+            return ConnectorState::SENT;
         }
         $statusArray = $this->getStatuseArray();
 
@@ -152,26 +153,26 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
     private function getStatuseArray()
     {
         return [
-            -1  => self::AUTH_PROBLEM,
-            -2  => self::AUTH_PROBLEM,
-            -3  => self::FAILED,
-            -4  => self::FAILED,
-            -5  => self::FAILED,
-            -6  => self::FAILED,
-            -7  => self::FAILED,
-            -8  => self::FAILED,
-            -9  => self::FAILED,
-            -10 => self::FAILED,
-            -11 => self::FAILED,
-            -12 => self::AUTH_PROBLEM,
-            -13 => self::AUTH_PROBLEM,
-            -14 => self::AUTH_PROBLEM,
-            -15 => self::FAILED,
-            -16 => self::FAILED,
-            -18 => self::FAILED,
-            -19 => self::FAILED,
-            -20 => self::FAILED,
-            -21 => self::FAILED,
+            -1  => ConnectorState::AUTH_PROBLEM,
+            -2  => ConnectorState::AUTH_PROBLEM,
+            -3  => ConnectorState::FAILED,
+            -4  => ConnectorState::FAILED,
+            -5  => ConnectorState::FAILED,
+            -6  => ConnectorState::FAILED,
+            -7  => ConnectorState::FAILED,
+            -8  => ConnectorState::FAILED,
+            -9  => ConnectorState::FAILED,
+            -10 => ConnectorState::FAILED,
+            -11 => ConnectorState::FAILED,
+            -12 => ConnectorState::AUTH_PROBLEM,
+            -13 => ConnectorState::AUTH_PROBLEM,
+            -14 => ConnectorState::AUTH_PROBLEM,
+            -15 => ConnectorState::FAILED,
+            -16 => ConnectorState::FAILED,
+            -18 => ConnectorState::FAILED,
+            -19 => ConnectorState::FAILED,
+            -20 => ConnectorState::FAILED,
+            -21 => ConnectorState::FAILED,
         ];
     }
 
@@ -181,9 +182,9 @@ class PayamResanConnector extends AbstractConnector implements SMSConnectorInter
     private function getStatusMessageArray()
     {
         return [
-            self::AUTH_PROBLEM => 'مشکلی در احراز هویت شما وجود دارد',
-            self::FAILED       => 'مشکل در ارسال پیامک',
-            self::SENT         => 'ارسال شده',
+            ConnectorState::AUTH_PROBLEM => 'مشکلی در احراز هویت شما وجود دارد',
+            ConnectorState::FAILED       => 'مشکل در ارسال پیامک',
+            ConnectorState::SENT         => 'ارسال شده',
         ];
     }
 }

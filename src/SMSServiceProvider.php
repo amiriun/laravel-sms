@@ -21,6 +21,11 @@ class SMSServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/sms.php' => config_path('sms.php'),
         ]);
+        $this->publishes([
+            __DIR__.'/database/2018_09_24_135839_create_table_sms_replies.php' => database_path('migrations/2018_09_24_135839_create_table_sms_replies.php'),
+        ]);
+
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
     }
 
     /**

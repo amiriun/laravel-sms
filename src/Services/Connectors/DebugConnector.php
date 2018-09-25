@@ -3,10 +3,11 @@ namespace Amiriun\SMS\Services\Connectors;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 
-class DebugConnector extends AbstractConnector implements SMSConnectorInterface
+class DebugConnector extends AbstractConnector
 {
 
     public function send(SendSMSDTO $DTO)
@@ -23,7 +24,7 @@ class DebugConnector extends AbstractConnector implements SMSConnectorInterface
      */
     public function getSystemStatus($statusCode = null)
     {
-        return self::QUEUED;
+        return ConnectorState::QUEUED;
     }
 
     /**

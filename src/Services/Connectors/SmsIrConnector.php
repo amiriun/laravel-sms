@@ -4,11 +4,12 @@ namespace Amiriun\SMS\Services\Connectors;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use GuzzleHttp\ClientInterface;
 
-class SmsIrConnector extends AbstractConnector implements SMSConnectorInterface
+class SmsIrConnector extends AbstractConnector
 {
     private $client;
 

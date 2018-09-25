@@ -2,17 +2,33 @@
 namespace Amiriun\SMS\Services\Connectors;
 
 
-abstract class AbstractConnector
-{
-    const QUEUED = 'queued';
-    const SCHEDULED = 'scheduled';
-    const SENT = 'sent';
-    const FAILED = 'failed';
-    const DELIVERED = 'delivered';
-    const UNDELIVERED = 'undelivered';
-    const CANCELED = 'canceled';
-    const BLOCKED = 'blocked';
-    const INVALID = 'invalid';
-    const AUTH_PROBLEM = 'auth_problem';
+use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 
+abstract class AbstractConnector implements SMSConnectorInterface
+{
+
+    /**
+     * @param ReceiveSMSDTO $DTO
+     *
+     * @throws \Exception
+     *
+     * @return void
+     */
+    public function receive(ReceiveSMSDTO $DTO)
+    {
+        $insertRecord = \DB::table('sms_replies')->insert(
+            [
+                'message_id' => $DTO->messageId,
+                'message' => $DTO->message,
+                'sender_number' => $DTO->senderNumber,
+                'to' => $DTO->to,
+                'sent_at' => $DTO->sentAt,
+            ]
+        );
+
+        if (!$insertRecord) {
+            throw new \Exception("Record cannot be inserted.");
+        }
+    }
 }
