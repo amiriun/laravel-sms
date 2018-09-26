@@ -29,23 +29,11 @@ class SmsIrConnector extends AbstractConnector
      */
     public function send(SendSMSDTO $DTO)
     {
-        $response = $this->client->request(
-            'POST',
-            "https://api.sms.ir/users/v1/Message/SendByMobileNumbers",
-            [
-                'form_params' => [
-                    'Message'  => $DTO->message,
-                    'MobileNumbers' => [$DTO->to],
-                    'CanContinueInCaseOfError'   => true,
-                ],
-                'headers'     => [
-                    'Content-Type' => 'application/json',
-                    'x-sms-ir-secure-token' => $this->getToken(),
-                ]
-            ]
-        );
+        $clientRequest = $this->prepareRequest($DTO);
+        $getResponseDTO = $this->prepareResponseDTO($clientRequest);
+        $this->repository->storeSendSMSLog($getResponseDTO);
 
-        return $this->getResponseDTO($response);
+        return $getResponseDTO;
     }
 
     /**
@@ -73,12 +61,13 @@ class SmsIrConnector extends AbstractConnector
      *
      * @return SentSMSOutputDTO
      */
-    private function getResponseDTO($res)
+    private function prepareResponseDTO($res)
     {
         $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
         $outputDTO->status = $responseArray->ErrorCode;
         $outputDTO->messageId = $responseArray->MessageId;
+        $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
 
@@ -111,5 +100,31 @@ class SmsIrConnector extends AbstractConnector
         return $responseObject->TokenKey;
 
 
+    }
+
+    /**
+     * @param SendSMSDTO $DTO
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function prepareRequest(SendSMSDTO $DTO)
+    {
+        return $this->client->request(
+            'POST',
+            "https://api.sms.ir/users/v1/Message/SendByMobileNumbers",
+            [
+                'form_params' => [
+                    'Message'                  => $DTO->message,
+                    'MobileNumbers'            => [$DTO->to],
+                    'CanContinueInCaseOfError' => true,
+                ],
+                'headers'     => [
+                    'Content-Type'          => 'application/json',
+                    'x-sms-ir-secure-token' => $this->getToken(),
+                ]
+            ]
+        );
     }
 }

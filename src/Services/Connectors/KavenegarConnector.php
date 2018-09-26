@@ -24,27 +24,16 @@ class KavenegarConnector extends AbstractConnector
      * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
+     * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function send(SendSMSDTO $DTO)
     {
-        $apiKey = config('sms.kavenegar.api_key');
-        $response = $this->client->request(
-            'POST',
-            "https://api.kavenegar.com/v1/$apiKey/sms/send.json",
-            [
-                'form_params' => [
-                    'receptor' => $DTO->to,
-                    'message'  => $DTO->message,
-                    'sender'   => $this->getSenderNumber($DTO->senderNumber)
-                ],
-                'headers'     => [
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ]
-            ]
-        );
+        $response = $this->prepareRequest($DTO, config('sms.kavenegar.api_key'));
+        $getResponseDTO =  $this->prepareResponseDTO($response);
+        $this->repository->storeSendSMSLog($getResponseDTO);
 
-        return $this->getResponseDTO($response);
+        return $getResponseDTO;
     }
 
     public function getSystemStatus($statusCode)
@@ -97,7 +86,7 @@ class KavenegarConnector extends AbstractConnector
      *
      * @return SentSMSOutputDTO
      */
-    private function getResponseDTO($res)
+    private function prepareResponseDTO($res)
     {
         $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
@@ -106,6 +95,7 @@ class KavenegarConnector extends AbstractConnector
         $outputDTO->messageId = $responseArray->entries[0]->messageid;
         $outputDTO->senderNumber = $responseArray->entries[0]->sender;
         $outputDTO->to = $responseArray->entries[0]->receptor;
+        $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
 
@@ -123,5 +113,30 @@ class KavenegarConnector extends AbstractConnector
         }
 
         return $senderNumber;
+    }
+
+    /**
+     * @param SendSMSDTO $DTO
+     * @param            $apiKey
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function prepareRequest(SendSMSDTO $DTO, $apiKey)
+    {
+        return $this->client->request(
+            'POST',
+            "https://api.kavenegar.com/v1/$apiKey/sms/send.json",
+            [
+                'form_params' => [
+                    'receptor' => $DTO->to,
+                    'message'  => $DTO->message,
+                    'sender'   => $this->getSenderNumber($DTO->senderNumber)
+                ],
+                'headers'     => [
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ]
+            ]
+        );
     }
 }

@@ -28,6 +28,11 @@ interface SMSConnectorInterface
     public function receive(ReceiveSMSDTO $DTO);
 
     /**
+     * @return string
+     */
+    public function getConnectorName();
+
+    /**
      * @param int $statusCode
      *
      * @return string

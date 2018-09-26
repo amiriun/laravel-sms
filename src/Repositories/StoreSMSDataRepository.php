@@ -10,6 +10,8 @@ namespace Amiriun\SMS\Repositories;
 
 
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
+use Amiriun\SMS\DataContracts\SendSMSDTO;
+use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Illuminate\Database\ConnectionInterface;
 
 class StoreSMSDataRepository
@@ -27,12 +29,36 @@ class StoreSMSDataRepository
     }
 
     /**
+     * @param SentSMSOutputDTO $DTO
+     *
+     * @throws \Exception
+     */
+    public function storeSendSMSLog(SentSMSOutputDTO $DTO)
+    {
+        $store = $this->connection
+            ->table('sms_logs')
+            ->insert(
+                [
+                    'message_id'    => $DTO->messageId,
+                    'message'       => $DTO->messageResult,
+                    'sender_number' => $DTO->senderNumber,
+                    'to'            => $DTO->to,
+                    'is_delivered'  => false,
+                    'connector'     => $DTO->connectorName,
+                ]
+            );
+        if (!$store) {
+            throw new \Exception("Error in store receive data.");
+        }
+    }
+
+    /**
      * @param ReceiveSMSDTO $DTO
      *
      * @throws \Exception
      * @return void
      */
-    public function storeReceive(ReceiveSMSDTO $DTO)
+    public function storeReceiveSMSLog(ReceiveSMSDTO $DTO)
     {
         $store = $this->connection
             ->table('sms_replies')
@@ -46,7 +72,7 @@ class StoreSMSDataRepository
                     'sent_at'       => $DTO->sentAt,
                 ]
             );
-        if(!$store){
+        if (!$store) {
             throw new \Exception("Error in store receive data.");
         }
     }

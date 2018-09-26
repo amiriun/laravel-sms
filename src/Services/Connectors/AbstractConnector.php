@@ -20,6 +20,14 @@ abstract class AbstractConnector implements SMSConnectorInterface
      */
     public function receive(ReceiveSMSDTO $DTO)
     {
-        $this->repository->storeReceive($DTO);
+        $this->repository->storeReceiveSMSLog($DTO);
+    }
+
+    public function getConnectorName()
+    {
+        $getConnectorClassName = class_basename($this);
+        $removeConnectorFromClassName = str_replace('Connector','',$getConnectorClassName);
+
+        return strtolower($removeConnectorFromClassName);
     }
 }

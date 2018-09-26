@@ -9,5 +9,6 @@ class SentSMSOutputDTO
     public $to;
     public $senderNumber;
     public $messageResult;
+    public $connectorName;
 
 }

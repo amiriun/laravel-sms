@@ -16,11 +16,19 @@ class DebugConnector extends AbstractConnector
         $this->repository = $repository;
     }
 
+    /**
+     * @param SendSMSDTO $DTO
+     *
+     * @return SentSMSOutputDTO
+     * @throws \Exception
+     */
     public function send(SendSMSDTO $DTO)
     {
         \Log::info("Send SMS \n from: {$DTO->senderNumber} \n to: {$DTO->to} \n message: {$DTO->message}");
+        $getResponseDTO = $this->prepareResponseDTO($DTO);
+        $this->repository->storeSendSMSLog($getResponseDTO);
 
-        return $this->getResponseDTO($DTO);
+        return $getResponseDTO;
     }
 
     /**
@@ -43,7 +51,7 @@ class DebugConnector extends AbstractConnector
         return 'ارسال شده';
     }
 
-    private function getResponseDTO(SendSMSDTO $DTO)
+    private function prepareResponseDTO(SendSMSDTO $DTO)
     {
         $outputDTO = new SentSMSOutputDTO();
         $outputDTO->status = $this->getSystemStatus();
@@ -51,6 +59,7 @@ class DebugConnector extends AbstractConnector
         $outputDTO->messageId = rand(1000000,9000000);
         $outputDTO->senderNumber = $DTO->senderNumber;
         $outputDTO->to = $DTO->to;
+        $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
     }

@@ -29,11 +29,11 @@ class PayamResanConnector extends AbstractConnector
      */
     public function send(SendSMSDTO $DTO)
     {
-        $parameters = $this->setParameters($DTO);
-        $this->checkCredit($parameters);
-        $messageResult = $this->sendMessage($parameters);
+        $messageResult = $this->prepareRequest($DTO);
+        $getResponseDTO = $this->prepareResponseDTO($messageResult->SendMessageResult->long, $DTO);
+        $this->repository->storeSendSMSLog($getResponseDTO);
 
-        return $this->getResponseDTO($messageResult->SendMessageResult->long, $DTO);
+        return $getResponseDTO;
     }
 
     /**
@@ -137,7 +137,7 @@ class PayamResanConnector extends AbstractConnector
      *
      * @return SentSMSOutputDTO
      */
-    private function getResponseDTO($resultCode, SendSMSDTO $DTO)
+    private function prepareResponseDTO($resultCode, SendSMSDTO $DTO)
     {
         $outputDTO = new SentSMSOutputDTO();
         $outputDTO->status = $this->getSystemStatus($resultCode);
@@ -145,6 +145,7 @@ class PayamResanConnector extends AbstractConnector
         $outputDTO->senderNumber = $this->getSenderNumber($DTO->senderNumber);
         $outputDTO->to = $DTO->to;
         $outputDTO->messageId = $resultCode;
+        $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
     }
@@ -188,5 +189,19 @@ class PayamResanConnector extends AbstractConnector
             ConnectorState::FAILED       => 'مشکل در ارسال پیامک',
             ConnectorState::SENT         => 'ارسال شده',
         ];
+    }
+
+    /**
+     * @param $DTO
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function prepareRequest($DTO)
+    {
+        $parameters = $this->setParameters($DTO);
+        $this->checkCredit($parameters);
+
+        return $this->sendMessage($parameters);
     }
 }
