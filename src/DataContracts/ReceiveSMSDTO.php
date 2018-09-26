@@ -10,4 +10,5 @@ class ReceiveSMSDTO
     public $senderNumber;
     public $to;
     public $sentAt;
+    public $connectorName;
 }

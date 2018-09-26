@@ -18,6 +18,7 @@ class HookController extends Controller
 
     public function receiveKavenegar(){
         $DTO = new ReceiveSMSDTO();
+        $DTO->connectorName = 'kavenegar';
         $DTO->sentAt = Carbon::now();
         $DTO->senderNumber = \Request::get('from');
         $DTO->to = \Request::get('to');

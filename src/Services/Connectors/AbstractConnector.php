@@ -23,6 +23,7 @@ abstract class AbstractConnector implements SMSConnectorInterface
                 'message' => $DTO->message,
                 'sender_number' => $DTO->senderNumber,
                 'to' => $DTO->to,
+                'connector' => $DTO->connectorName,
                 'sent_at' => $DTO->sentAt,
             ]
         );
