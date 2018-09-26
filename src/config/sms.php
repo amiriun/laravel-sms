@@ -46,4 +46,8 @@ return [
         'sms_ir'     => \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
         'payamresan' => \Amiriun\SMS\Services\Connectors\PayamResanConnector::class,
     ],
+
+    'events' => [
+        'after_receiving_sms' => \Amiriun\Sms\Events\SMSWasReceived::class,
+    ]
 ];

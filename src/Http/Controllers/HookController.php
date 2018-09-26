@@ -25,6 +25,9 @@ class HookController extends Controller
         $DTO->message = \Request::get('message');
 
         $this->service->receive($DTO);
+
+        $eventInstanceName = config('sms.events.after_receiving_sms');
+        event(new $eventInstanceName($DTO));
     }
 
 }

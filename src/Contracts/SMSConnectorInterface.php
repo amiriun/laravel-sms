@@ -15,6 +15,11 @@ interface SMSConnectorInterface
      */
     public function send(SendSMSDTO $DTO);
 
+    /**
+     * @param ReceiveSMSDTO $DTO
+     *
+     * @return void
+     */
     public function receive(ReceiveSMSDTO $DTO);
 
     /**

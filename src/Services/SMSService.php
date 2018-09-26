@@ -30,10 +30,10 @@ class SMSService
     /**
      * @param ReceiveSMSDTO $DTO
      *
-     * @return SentSMSOutputDTO
+     * @return void
      */
     public function receive(ReceiveSMSDTO $DTO)
     {
-        return $this->connector->send($DTO);
+        $this->connector->receive($DTO);
     }
 }
