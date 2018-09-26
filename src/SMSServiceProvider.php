@@ -25,7 +25,9 @@ class SMSServiceProvider extends ServiceProvider
             __DIR__.'/database/2018_09_24_135839_create_table_sms_replies.php' => database_path('migrations/2018_09_24_135839_create_table_sms_replies.php'),
         ]);
 
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        if (! $this->app->routesAreCached()) {
+            require __DIR__.'/routes.php';
+        }
     }
 
     /**
