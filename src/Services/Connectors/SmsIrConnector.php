@@ -7,15 +7,17 @@ use Amiriun\SMS\Contracts\SMSConnectorInterface;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
+use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
 class SmsIrConnector extends AbstractConnector
 {
     private $client;
 
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client,StoreSMSDataRepository $repository)
     {
         $this->client = $client;
+        $this->repository = $repository;
     }
 
     /**

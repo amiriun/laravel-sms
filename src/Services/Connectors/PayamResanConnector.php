@@ -7,15 +7,17 @@ use Amiriun\SMS\Contracts\SMSConnectorInterface;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
+use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
 class PayamResanConnector extends AbstractConnector
 {
     private $client;
 
-    public function __construct()
+    public function __construct(StoreSMSDataRepository $repository)
     {
         $this->client = app('PayamResanClient');
+        $this->repository = $repository;
     }
 
     /**

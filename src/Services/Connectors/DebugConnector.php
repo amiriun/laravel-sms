@@ -6,9 +6,15 @@ use Amiriun\SMS\Contracts\SMSConnectorInterface;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
+use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 
 class DebugConnector extends AbstractConnector
 {
+
+    public function __construct(StoreSMSDataRepository $repository)
+    {
+        $this->repository = $repository;
+    }
 
     public function send(SendSMSDTO $DTO)
     {

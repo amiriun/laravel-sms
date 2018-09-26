@@ -6,6 +6,11 @@ use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 
+/**
+ * Interface SMSConnectorInterface
+ * @package Amiriun\SMS\Contracts
+ *
+ */
 interface SMSConnectorInterface
 {
     /**
