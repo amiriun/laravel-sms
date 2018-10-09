@@ -4,6 +4,7 @@ namespace Amiriun\SMS\Services;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
@@ -35,5 +36,10 @@ class SMSService
     public function receive(ReceiveSMSDTO $DTO)
     {
         $this->connector->receive($DTO);
+    }
+
+    public function deliver(DeliverSMSDTO $DTO)
+    {
+        $this->connector->deliver($DTO);
     }
 }

@@ -3,8 +3,7 @@
 namespace Amiriun\SMS\Services\Connectors;
 
 
-use Amiriun\SMS\Contracts\SMSConnectorInterface;
-use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
@@ -14,7 +13,7 @@ class KavenegarConnector extends AbstractConnector
 {
     private $client;
 
-    public function __construct(ClientInterface $client,StoreSMSDataRepository $repository)
+    public function __construct(ClientInterface $client, StoreSMSDataRepository $repository)
     {
         $this->client = $client;
         $this->repository = $repository;
@@ -29,11 +28,21 @@ class KavenegarConnector extends AbstractConnector
      */
     public function send(SendSMSDTO $DTO)
     {
-        $response = $this->prepareRequest($DTO, config('sms.kavenegar.api_key'));
-        $getResponseDTO =  $this->prepareResponseDTO($response);
+        $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
+        $getResponseDTO = $this->prepareResponseDTO($response);
         $this->repository->storeSendSMSLog($getResponseDTO);
 
         return $getResponseDTO;
+    }
+
+    /**
+     * @param DeliverSMSDTO $DTO
+     *
+     * @throws \Exception
+     */
+    public function deliver(DeliverSMSDTO $DTO)
+    {
+        $this->repository->deliver($DTO);
     }
 
     public function getSystemStatus($statusCode)
@@ -69,15 +78,15 @@ class KavenegarConnector extends AbstractConnector
     private function getStatusMessageArray()
     {
         return [
-            ConnectorState::QUEUED => 'در صف ارسال قرار دارد.',
-            ConnectorState::SCHEDULED => 'زمان بندی شده (ارسال در تاریخ معین ).',
-            ConnectorState::SENT => 'ارسال شده به مخابرات.',
-            ConnectorState::FAILED => 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می باشد ',
-            ConnectorState::DELIVERED => 'رسیده به گیرنده',
+            ConnectorState::QUEUED      => 'در صف ارسال قرار دارد.',
+            ConnectorState::SCHEDULED   => 'زمان بندی شده (ارسال در تاریخ معین ).',
+            ConnectorState::SENT        => 'ارسال شده به مخابرات.',
+            ConnectorState::FAILED      => 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می باشد ',
+            ConnectorState::DELIVERED   => 'رسیده به گیرنده',
             ConnectorState::UNDELIVERED => 'نرسیده به گیرنده ،این وضعیت به دلایلی از جمله خاموش یا خارج از دسترس بودن گیرنده اتفاق می افتد',
-            ConnectorState::CANCELED => ' ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده میشود.',
-            ConnectorState::BLOCKED => 'بلاک شده است،عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده میشود',
-            ConnectorState::INVALID => 'شناسه پیامک نامعتبر است.( به این معنی که شناسه پیام در پایگاه داده کاوه نگار ثبت نشده است یا متعلق به شما نمی باشد)',
+            ConnectorState::CANCELED    => ' ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده میشود.',
+            ConnectorState::BLOCKED     => 'بلاک شده است،عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده میشود',
+            ConnectorState::INVALID     => 'شناسه پیامک نامعتبر است.( به این معنی که شناسه پیام در پایگاه داده کاوه نگار ثبت نشده است یا متعلق به شما نمی باشد)',
         ];
     }
 
@@ -122,7 +131,7 @@ class KavenegarConnector extends AbstractConnector
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function prepareRequest(SendSMSDTO $DTO, $apiKey)
+    private function prepareSendRequest(SendSMSDTO $DTO, $apiKey)
     {
         return $this->client->request(
             'POST',

@@ -2,6 +2,7 @@
 namespace Amiriun\SMS\Contracts;
 
 
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
@@ -45,4 +46,6 @@ interface SMSConnectorInterface
      * @return string
      */
     public function getSystemMessage($systemStatus);
+
+    public function deliver(DeliverSMSDTO $DTO);
 }

@@ -13,14 +13,16 @@ class CreateTableSmsReplies extends Migration
      */
     public function up()
     {
-        Schema::create('sms_replies', function(Blueprint $table)
+        Schema::create('sms_logs', function(Blueprint $table)
         {
             $table->increments('id');
 
+            $table->enum('type', ['send', 'receive']);
             $table->string('message_id',30)->nullable();
             $table->text('message');
             $table->string('sender_number',25)->index();
             $table->string('to',25)->index();
+            $table->boolean('is_delivered')->nullable();
             $table->string('connector','30');
             $table->timestamp('sent_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
@@ -35,6 +37,7 @@ class CreateTableSmsReplies extends Migration
      */
     public function down()
     {
-        Schema::drop('sms_replies');
+        Schema::drop('sms_logs');
+        Schema::dropIfExists('sms_replies');
     }
 }

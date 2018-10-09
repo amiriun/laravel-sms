@@ -9,8 +9,8 @@
 namespace Amiriun\SMS\Repositories;
 
 
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
-use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Illuminate\Database\ConnectionInterface;
 
@@ -21,11 +21,6 @@ class StoreSMSDataRepository
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-    }
-
-    public function deliver()
-    {
-
     }
 
     /**
@@ -45,6 +40,7 @@ class StoreSMSDataRepository
                     'to'            => $DTO->to,
                     'is_delivered'  => false,
                     'connector'     => $DTO->connectorName,
+                    'type'          => 'send',
                 ]
             );
         if (!$store) {
@@ -61,7 +57,7 @@ class StoreSMSDataRepository
     public function storeReceiveSMSLog(ReceiveSMSDTO $DTO)
     {
         $store = $this->connection
-            ->table('sms_replies')
+            ->table('sms_logs')
             ->insert(
                 [
                     'message_id'    => $DTO->messageId,
@@ -70,11 +66,24 @@ class StoreSMSDataRepository
                     'to'            => $DTO->to,
                     'connector'     => $DTO->connectorName,
                     'sent_at'       => $DTO->sentAt,
+                    'type'          => 'receive',
                 ]
             );
         if (!$store) {
             throw new \Exception("Error in store receive data.");
         }
+    }
+
+    public function deliver(DeliverSMSDTO $DTO)
+    {
+
+        $getRecord = $this->connection->table(config('sms.logging.send_logs.table_name'))
+            ->where('message_id', $DTO->messageId)
+            ->where('connector', $DTO->connectorName);
+        if (!$getRecord->exists()) {
+            throw new \Exception("Record for delivering is not exist.");
+        }
+        $getRecord->update(['is_delivered', 1]);
     }
 
 }

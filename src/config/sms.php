@@ -13,6 +13,19 @@ return [
     */
     'default_gateway' => env('SMS_GATEWAY', 'debug'),
 
+    'logging' => [
+        'send_logs' => [
+            'need_log' => true,
+            'table_name' => 'sms_logs',
+            'connection' => \Illuminate\Database\MySqlConnection::class,
+        ],
+        'receive_logs' => [
+            'need_log' => true,
+            'table_name' => 'sms_logs',
+            'connection' => \Illuminate\Database\MySqlConnection::class,
+        ],
+    ],
+
     'kavenegar'    => [
         'api_key' => env('KAVENEGAR_API_KEY', 'YOUR_API_KEY'),
         'numbers' => [
@@ -39,15 +52,21 @@ return [
             'YOUR_NUMBERS',
         ],
     ],
+    'debug' => [
+        'numbers' => [
+            '30003000300',
+        ],
+    ],
 
     'map_gateway_to_connector' => [
-        'debug'      => \Amiriun\SMS\Services\Connectors\DebugConnector::class,
-        'kavenegar'  => \Amiriun\SMS\Services\Connectors\KavenegarConnector::class,
-        'sms_ir'     => \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
-        'payamresan' => \Amiriun\SMS\Services\Connectors\PayamResanConnector::class,
+        \Amiriun\SMS\Services\Connectors\DebugConnector::class,
+        \Amiriun\SMS\Services\Connectors\KavenegarConnector::class,
+        \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
+        \Amiriun\SMS\Services\Connectors\PayamResanConnector::class,
     ],
 
     'events' => [
         'after_receiving_sms' => \Amiriun\Sms\Events\SMSWasReceived::class,
+        'after_delivering_sms' => \Amiriun\Sms\Events\SMSWasDelivered::class,
     ]
 ];

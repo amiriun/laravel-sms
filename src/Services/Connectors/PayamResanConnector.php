@@ -4,6 +4,7 @@ namespace Amiriun\SMS\Services\Connectors;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
@@ -16,7 +17,7 @@ class PayamResanConnector extends AbstractConnector
 
     public function __construct(StoreSMSDataRepository $repository)
     {
-        $this->client = app('PayamResanClient');
+        $this->client = new \SoapClient('http://sms-webservice.ir/v1/v1.asmx?WSDL');
         $this->repository = $repository;
     }
 
@@ -34,6 +35,11 @@ class PayamResanConnector extends AbstractConnector
         $this->repository->storeSendSMSLog($getResponseDTO);
 
         return $getResponseDTO;
+    }
+
+    public function deliver(DeliverSMSDTO $DTO)
+    {
+        //
     }
 
     /**

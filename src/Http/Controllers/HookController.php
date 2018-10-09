@@ -2,6 +2,7 @@
 namespace Amiriun\SMS\Http\Controllers;
 
 
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\Services\SMSService;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,17 @@ class HookController extends Controller
         $this->service->receive($DTO);
 
         $eventInstanceName = config('sms.events.after_receiving_sms');
+        event(new $eventInstanceName($DTO));
+    }
+
+    public function deliverKavenegar(){
+        $DTO = new DeliverSMSDTO();
+        $DTO->connectorName = 'kavenegar';
+        $DTO->messageId = \Request::get('messageid');
+
+        $this->service->deliver($DTO);
+
+        $eventInstanceName = config('sms.events.after_delivering_sms');
         event(new $eventInstanceName($DTO));
     }
 

@@ -4,6 +4,7 @@ namespace Amiriun\SMS\Services\Connectors;
 
 
 use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
@@ -34,6 +35,11 @@ class SmsIrConnector extends AbstractConnector
         $this->repository->storeSendSMSLog($getResponseDTO);
 
         return $getResponseDTO;
+    }
+
+    public function deliver(DeliverSMSDTO $DTO)
+    {
+        //
     }
 
     /**
