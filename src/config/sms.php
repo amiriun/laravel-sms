@@ -59,10 +59,10 @@ return [
     ],
 
     'map_gateway_to_connector' => [
-        \Amiriun\SMS\Services\Connectors\DebugConnector::class,
-        \Amiriun\SMS\Services\Connectors\KavenegarConnector::class,
-        \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
-        \Amiriun\SMS\Services\Connectors\PayamResanConnector::class,
+        'debug' => \Amiriun\SMS\Services\Connectors\DebugConnector::class,
+        'kavenegar' => \Amiriun\SMS\Services\Connectors\KavenegarConnector::class,
+        'sms_ir' => \Amiriun\SMS\Services\Connectors\SmsIrConnector::class,
+        'payamresan' => \Amiriun\SMS\Services\Connectors\PayamResanConnector::class,
     ],
 
     'events' => [
