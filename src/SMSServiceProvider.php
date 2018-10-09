@@ -39,7 +39,6 @@ class SMSServiceProvider extends ServiceProvider
     {
         $this->app->bind(ClientInterface::class,Client::class);
         $this->app->bind(SMSConnectorInterface::class,$this->getConnectorInstance());
-        $this->app->instance('PayamResanClient',new \SoapClient('http://sms-webservice.ir/v1/v1.asmx?WSDL'));
     }
 
     private function getConnectorInstance()
