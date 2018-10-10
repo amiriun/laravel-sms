@@ -63,10 +63,24 @@ class DebugConnector extends AbstractConnector
         $outputDTO->status = $this->getSystemStatus();
         $outputDTO->messageResult = $this->getSystemMessage();
         $outputDTO->messageId = rand(1000000,9000000);
-        $outputDTO->senderNumber = $DTO->senderNumber;
+        $outputDTO->senderNumber = $this->getSenderNumber($DTO->senderNumber);
         $outputDTO->to = $DTO->to;
         $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
+    }
+
+    /**
+     * @param SendSMSDTO $DTO
+     *
+     * @return mixed
+     */
+    private function getSenderNumber($senderNumber)
+    {
+        if (is_null($senderNumber)) {
+            return config('sms.debug.numbers.0');
+        }
+
+        return $senderNumber;
     }
 }
