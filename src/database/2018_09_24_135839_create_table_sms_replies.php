@@ -27,6 +27,8 @@ class CreateTableSmsReplies extends Migration
             $table->timestamp('sent_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
 
+            $table->index(['message_id','connector']);
+
         });
     }
 

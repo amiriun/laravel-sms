@@ -78,8 +78,10 @@ class StoreSMSDataRepository
     {
 
         $getRecord = $this->connection->table(config('sms.logging.send_logs.table_name'))
-            ->where('message_id', $DTO->messageId)
-            ->where('connector', $DTO->connectorName);
+            ->where(function ($q) use ($DTO){
+                $q->where('message_id', $DTO->messageId);
+                $q->where('connector', $DTO->connectorName);
+            });
         if (!$getRecord->exists()) {
             throw new \Exception("Record for delivering is not exist.");
         }
