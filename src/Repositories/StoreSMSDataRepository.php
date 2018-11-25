@@ -86,7 +86,7 @@ class StoreSMSDataRepository
         if (!$getRecord->exists()) {
             throw new \Exception("Record for delivering is not exist.");
         }
-        $getRecord->update(['is_delivered', 1]);
+        $getRecord->update(['is_delivered'=>1]);
     }
 
 }
