@@ -100,7 +100,7 @@ class KavenegarConnector extends AbstractConnector
         $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
         $outputDTO->status = $this->getSystemStatus($responseArray->entries[0]->status);
-        $outputDTO->messageResult = $this->getSystemMessage($outputDTO->status);
+        $outputDTO->messageResult = $responseArray->entries[0]->message;
         $outputDTO->messageId = $responseArray->entries[0]->messageid;
         $outputDTO->senderNumber = $responseArray->entries[0]->sender;
         $outputDTO->to = $responseArray->entries[0]->receptor;

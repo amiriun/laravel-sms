@@ -40,6 +40,7 @@ class StoreSMSDataRepository
                     'to'            => $DTO->to,
                     'is_delivered'  => false,
                     'connector'     => $DTO->connectorName,
+                    'status'        => $DTO->status,
                     'type'          => 'send',
                 ]
             );
@@ -78,7 +79,7 @@ class StoreSMSDataRepository
     {
 
         $getRecord = $this->connection->table(config('sms.logging.send_logs.table_name'))
-            ->where(function ($q) use ($DTO){
+            ->where(function ($q) use ($DTO) {
                 $q->where('message_id', $DTO->messageId);
                 $q->where('connector', $DTO->connectorName);
             });
