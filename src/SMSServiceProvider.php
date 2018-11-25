@@ -23,6 +23,7 @@ class SMSServiceProvider extends ServiceProvider
         ]);
         $this->publishes([
             __DIR__.'/database/2018_09_24_135839_create_table_sms_replies.php' => database_path('migrations/2018_09_24_135839_create_table_sms_replies.php'),
+            __DIR__.'/database/2018_11_25_104736_add_status_column_to_sms_logs.php' => database_path('migrations/2018_11_25_104736_add_status_column_to_sms_logs.php'),
         ]);
 
         if (! $this->app->routesAreCached()) {
