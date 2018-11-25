@@ -1,5 +1,5 @@
 <?php
-namespace Amiriun\Sms\Events;
+namespace Amiriun\SMS\Events;
 
 
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
