@@ -84,7 +84,7 @@ class StoreSMSDataRepository
                 $q->where('connector', $DTO->connectorName);
             });
         if (!$getRecord->exists()) {
-            throw new \Exception("Record for delivering is not exist.");
+            throw new \Exception("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
         $getRecord->update(['is_delivered'=>1]);
     }
