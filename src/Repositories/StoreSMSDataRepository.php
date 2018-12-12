@@ -1,4 +1,5 @@
 <?php
+
 namespace Amiriun\SMS\Repositories;
 
 
@@ -31,7 +32,7 @@ class StoreSMSDataRepository
                     'message'       => $DTO->messageResult,
                     'sender_number' => $DTO->senderNumber,
                     'to'            => $DTO->to,
-                    'is_delivered'  => false,
+                    'delivered_at'  => null,
                     'connector'     => $DTO->connectorName,
                     'status'        => $DTO->status,
                     'type'          => 'send',
@@ -79,7 +80,7 @@ class StoreSMSDataRepository
         if (!$getRecord->exists()) {
             throw new \Exception("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
-        $getRecord->update(['delivered_at'=>date('Y-m-d H:i:s')]);
+        $getRecord->update(['delivered_at' => date('Y-m-d H:i:s')]);
     }
 
 }
