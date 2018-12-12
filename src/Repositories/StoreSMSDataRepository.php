@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: amir
- * Date: 9/26/18
- * Time: 10:05 PM
- */
-
 namespace Amiriun\SMS\Repositories;
 
 
@@ -86,7 +79,7 @@ class StoreSMSDataRepository
         if (!$getRecord->exists()) {
             throw new \Exception("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
-        $getRecord->update(['is_delivered'=>1]);
+        $getRecord->update(['delivered_at'=>date('Y-m-d H:i:s')]);
     }
 
 }
