@@ -6,6 +6,7 @@ namespace Amiriun\SMS\Services\Connectors;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
+use Amiriun\SMS\Exceptions\DeliverSMSException;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
@@ -38,7 +39,7 @@ class KavenegarConnector extends AbstractConnector
     /**
      * @param DeliverSMSDTO $DTO
      *
-     * @throws \Exception
+     * @throws DeliverSMSException
      */
     public function deliver(DeliverSMSDTO $DTO)
     {

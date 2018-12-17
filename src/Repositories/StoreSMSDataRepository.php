@@ -6,6 +6,7 @@ namespace Amiriun\SMS\Repositories;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
+use Amiriun\SMS\Exceptions\DeliverSMSException;
 use Illuminate\Database\ConnectionInterface;
 
 class StoreSMSDataRepository
@@ -78,7 +79,7 @@ class StoreSMSDataRepository
                 $q->where('connector', $DTO->connectorName);
             });
         if (!$getRecord->exists()) {
-            throw new \Exception("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
+            throw new DeliverSMSException("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
         $getRecord->update(['delivered_at' => date('Y-m-d H:i:s')]);
     }
