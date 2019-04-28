@@ -70,16 +70,10 @@ class StoreSMSDataRepository
 
     public function deliver(DeliverSMSDTO $DTO)
     {
-
-        $getRecord = $this->storage->table(config('sms.logging.send_logs.table_name'))
-            ->where(function ($q) use ($DTO) {
-                $q->where('message_id', $DTO->messageId);
-                $q->where('connector', $DTO->connectorName);
-            });
-        if (!$getRecord->exists()) {
+        if (!$this->storage->isMessageIdExist($DTO->messageId,$DTO->connectorName)) {
             throw new DeliverSMSException("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
-        $getRecord->update(['delivered_at' => date('Y-m-d H:i:s')]);
+        $this->storage->setDeliveryForLog($DTO->messageId,$DTO->connectorName,date('Y-m-d H:i:s'));
     }
 
 }
