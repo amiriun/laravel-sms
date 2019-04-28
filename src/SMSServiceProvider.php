@@ -2,11 +2,11 @@
 
 namespace Amiriun\SMS;
 
+use Amiriun\SMS\Contracts\StorageInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Support\ServiceProvider;
 use Amiriun\SMS\Contracts\DriverInterface;
-use Amiriun\SMS\Services\Drivers\KavenegarDriver;
 
 class SMSServiceProvider extends ServiceProvider
 {
@@ -40,6 +40,7 @@ class SMSServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(ClientInterface::class,Client::class);
+        $this->app->bind(StorageInterface::class,config('sms.logging.storage'));
         $this->app->bind(DriverInterface::class,$this->getConnectorInstance());
     }
 

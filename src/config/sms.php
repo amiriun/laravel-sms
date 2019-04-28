@@ -14,15 +14,13 @@ return [
     'default_gateway' => env('SMS_GATEWAY', 'debug'),
 
     'logging' => [
+        'storage' => \Amiriun\SMS\Repositories\Storage\MysqlStorage::class,
+        'table_name' => 'sms_logs',
         'send_logs' => [
             'need_log' => true,
-            'table_name' => 'sms_logs',
-            'connection' => \Illuminate\Database\MySqlConnection::class,
         ],
         'receive_logs' => [
             'need_log' => true,
-            'table_name' => 'sms_logs',
-            'connection' => \Illuminate\Database\MySqlConnection::class,
         ],
     ],
 

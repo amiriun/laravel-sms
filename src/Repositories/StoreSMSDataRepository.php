@@ -3,19 +3,19 @@
 namespace Amiriun\SMS\Repositories;
 
 
+use Amiriun\SMS\Contracts\StorageInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Exceptions\DeliverSMSException;
-use Illuminate\Database\ConnectionInterface;
 
 class StoreSMSDataRepository
 {
-    private $connection;
+    private $storage;
 
-    public function __construct(ConnectionInterface $connection)
+    public function __construct(StorageInterface $connection)
     {
-        $this->connection = $connection;
+        $this->storage = $connection;
     }
 
     /**
@@ -25,8 +25,7 @@ class StoreSMSDataRepository
      */
     public function storeSendSMSLog(SentSMSOutputDTO $DTO)
     {
-        $store = $this->connection
-            ->table('sms_logs')
+        $store = $this->storage
             ->insert(
                 [
                     'message_id'    => $DTO->messageId,
@@ -52,8 +51,7 @@ class StoreSMSDataRepository
      */
     public function storeReceiveSMSLog(ReceiveSMSDTO $DTO)
     {
-        $store = $this->connection
-            ->table('sms_logs')
+        $store = $this->storage
             ->insert(
                 [
                     'message_id'    => $DTO->messageId,
@@ -73,7 +71,7 @@ class StoreSMSDataRepository
     public function deliver(DeliverSMSDTO $DTO)
     {
 
-        $getRecord = $this->connection->table(config('sms.logging.send_logs.table_name'))
+        $getRecord = $this->storage->table(config('sms.logging.send_logs.table_name'))
             ->where(function ($q) use ($DTO) {
                 $q->where('message_id', $DTO->messageId);
                 $q->where('connector', $DTO->connectorName);
