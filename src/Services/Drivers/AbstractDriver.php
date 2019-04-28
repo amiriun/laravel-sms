@@ -1,12 +1,12 @@
 <?php
-namespace Amiriun\SMS\Services\Connectors;
+namespace Amiriun\SMS\Services\Drivers;
 
 
-use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 
-abstract class AbstractConnector implements SMSConnectorInterface
+abstract class AbstractDriver implements DriverInterface
 {
     /**
      * @var StoreSMSDataRepository

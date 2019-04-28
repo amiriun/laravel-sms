@@ -1,9 +1,9 @@
 <?php
 
-namespace Amiriun\SMS\Services\Connectors;
+namespace Amiriun\SMS\Services\Drivers;
 
 
-use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
@@ -11,7 +11,7 @@ use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
-class SmsIrConnector extends AbstractConnector
+class SmsIrDriver extends AbstractDriver
 {
     private $client;
 

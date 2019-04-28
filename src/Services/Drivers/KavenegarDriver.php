@@ -1,6 +1,6 @@
 <?php
 
-namespace Amiriun\SMS\Services\Connectors;
+namespace Amiriun\SMS\Services\Drivers;
 
 
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
@@ -10,7 +10,7 @@ use Amiriun\SMS\Exceptions\DeliverSMSException;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
-class KavenegarConnector extends AbstractConnector
+class KavenegarDriver extends AbstractDriver
 {
     private $client;
 
@@ -63,31 +63,31 @@ class KavenegarConnector extends AbstractConnector
     private function getStatuseArray()
     {
         return [
-            1   => ConnectorState::QUEUED,
-            2   => ConnectorState::SCHEDULED,
-            4   => ConnectorState::SENT,
-            5   => ConnectorState::SENT,
-            6   => ConnectorState::FAILED,
-            10  => ConnectorState::DELIVERED,
-            11  => ConnectorState::UNDELIVERED,
-            13  => ConnectorState::CANCELED,
-            14  => ConnectorState::BLOCKED,
-            100 => ConnectorState::INVALID,
+            1   => DriverState::QUEUED,
+            2   => DriverState::SCHEDULED,
+            4   => DriverState::SENT,
+            5   => DriverState::SENT,
+            6   => DriverState::FAILED,
+            10  => DriverState::DELIVERED,
+            11  => DriverState::UNDELIVERED,
+            13  => DriverState::CANCELED,
+            14  => DriverState::BLOCKED,
+            100 => DriverState::INVALID,
         ];
     }
 
     private function getStatusMessageArray()
     {
         return [
-            ConnectorState::QUEUED      => 'در صف ارسال قرار دارد.',
-            ConnectorState::SCHEDULED   => 'زمان بندی شده (ارسال در تاریخ معین ).',
-            ConnectorState::SENT        => 'ارسال شده به مخابرات.',
-            ConnectorState::FAILED      => 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می باشد ',
-            ConnectorState::DELIVERED   => 'رسیده به گیرنده',
-            ConnectorState::UNDELIVERED => 'نرسیده به گیرنده ،این وضعیت به دلایلی از جمله خاموش یا خارج از دسترس بودن گیرنده اتفاق می افتد',
-            ConnectorState::CANCELED    => ' ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده میشود.',
-            ConnectorState::BLOCKED     => 'بلاک شده است،عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده میشود',
-            ConnectorState::INVALID     => 'شناسه پیامک نامعتبر است.( به این معنی که شناسه پیام در پایگاه داده کاوه نگار ثبت نشده است یا متعلق به شما نمی باشد)',
+            DriverState::QUEUED      => 'در صف ارسال قرار دارد.',
+            DriverState::SCHEDULED   => 'زمان بندی شده (ارسال در تاریخ معین ).',
+            DriverState::SENT        => 'ارسال شده به مخابرات.',
+            DriverState::FAILED      => 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می باشد ',
+            DriverState::DELIVERED   => 'رسیده به گیرنده',
+            DriverState::UNDELIVERED => 'نرسیده به گیرنده ،این وضعیت به دلایلی از جمله خاموش یا خارج از دسترس بودن گیرنده اتفاق می افتد',
+            DriverState::CANCELED    => ' ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده میشود.',
+            DriverState::BLOCKED     => 'بلاک شده است،عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده میشود',
+            DriverState::INVALID     => 'شناسه پیامک نامعتبر است.( به این معنی که شناسه پیام در پایگاه داده کاوه نگار ثبت نشده است یا متعلق به شما نمی باشد)',
         ];
     }
 

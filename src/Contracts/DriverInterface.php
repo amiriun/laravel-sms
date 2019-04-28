@@ -12,7 +12,7 @@ use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
  * @package Amiriun\SMS\Contracts
  *
  */
-interface SMSConnectorInterface
+interface DriverInterface
 {
     /**
      * @param SendSMSDTO $DTO

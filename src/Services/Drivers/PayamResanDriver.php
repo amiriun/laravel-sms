@@ -1,9 +1,9 @@
 <?php
 
-namespace Amiriun\SMS\Services\Connectors;
+namespace Amiriun\SMS\Services\Drivers;
 
 
-use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
@@ -11,7 +11,7 @@ use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 
-class PayamResanConnector extends AbstractConnector
+class PayamResanDriver extends AbstractDriver
 {
     private $client;
 
@@ -50,7 +50,7 @@ class PayamResanConnector extends AbstractConnector
     public function getSystemStatus($statusCode)
     {
         if ($statusCode > 0) {
-            return ConnectorState::SENT;
+            return DriverState::SENT;
         }
         $statusArray = $this->getStatuseArray();
 
@@ -162,26 +162,26 @@ class PayamResanConnector extends AbstractConnector
     private function getStatuseArray()
     {
         return [
-            -1  => ConnectorState::AUTH_PROBLEM,
-            -2  => ConnectorState::AUTH_PROBLEM,
-            -3  => ConnectorState::FAILED,
-            -4  => ConnectorState::FAILED,
-            -5  => ConnectorState::FAILED,
-            -6  => ConnectorState::FAILED,
-            -7  => ConnectorState::FAILED,
-            -8  => ConnectorState::FAILED,
-            -9  => ConnectorState::FAILED,
-            -10 => ConnectorState::FAILED,
-            -11 => ConnectorState::FAILED,
-            -12 => ConnectorState::AUTH_PROBLEM,
-            -13 => ConnectorState::AUTH_PROBLEM,
-            -14 => ConnectorState::AUTH_PROBLEM,
-            -15 => ConnectorState::FAILED,
-            -16 => ConnectorState::FAILED,
-            -18 => ConnectorState::FAILED,
-            -19 => ConnectorState::FAILED,
-            -20 => ConnectorState::FAILED,
-            -21 => ConnectorState::FAILED,
+            -1  => DriverState::AUTH_PROBLEM,
+            -2  => DriverState::AUTH_PROBLEM,
+            -3  => DriverState::FAILED,
+            -4  => DriverState::FAILED,
+            -5  => DriverState::FAILED,
+            -6  => DriverState::FAILED,
+            -7  => DriverState::FAILED,
+            -8  => DriverState::FAILED,
+            -9  => DriverState::FAILED,
+            -10 => DriverState::FAILED,
+            -11 => DriverState::FAILED,
+            -12 => DriverState::AUTH_PROBLEM,
+            -13 => DriverState::AUTH_PROBLEM,
+            -14 => DriverState::AUTH_PROBLEM,
+            -15 => DriverState::FAILED,
+            -16 => DriverState::FAILED,
+            -18 => DriverState::FAILED,
+            -19 => DriverState::FAILED,
+            -20 => DriverState::FAILED,
+            -21 => DriverState::FAILED,
         ];
     }
 
@@ -191,9 +191,9 @@ class PayamResanConnector extends AbstractConnector
     private function getStatusMessageArray()
     {
         return [
-            ConnectorState::AUTH_PROBLEM => 'مشکلی در احراز هویت شما وجود دارد',
-            ConnectorState::FAILED       => 'مشکل در ارسال پیامک',
-            ConnectorState::SENT         => 'ارسال شده',
+            DriverState::AUTH_PROBLEM => 'مشکلی در احراز هویت شما وجود دارد',
+            DriverState::FAILED       => 'مشکل در ارسال پیامک',
+            DriverState::SENT         => 'ارسال شده',
         ];
     }
 

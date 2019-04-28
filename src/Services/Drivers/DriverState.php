@@ -1,8 +1,8 @@
 <?php
-namespace Amiriun\SMS\Services\Connectors;
+namespace Amiriun\SMS\Services\Drivers;
 
 
-class ConnectorState
+class DriverState
 {
     const QUEUED = 'queued';
     const SCHEDULED = 'scheduled';

@@ -3,7 +3,7 @@
 namespace Amiriun\SMS\Services;
 
 
-use Amiriun\SMS\Contracts\SMSConnectorInterface;
+use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
@@ -13,7 +13,7 @@ class SMSService
 {
     private $connector;
 
-    public function __construct(SMSConnectorInterface $connector)
+    public function __construct(DriverInterface $connector)
     {
         $this->connector = $connector;
     }
