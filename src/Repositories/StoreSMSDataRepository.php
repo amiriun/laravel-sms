@@ -25,6 +25,9 @@ class StoreSMSDataRepository
      */
     public function storeSendSMSLog(SentSMSOutputDTO $DTO)
     {
+        if(!config('sms.logging.send_logs.need_log')){
+            return;
+        }
         $store = $this->storage
             ->insert(
                 [
@@ -51,6 +54,9 @@ class StoreSMSDataRepository
      */
     public function storeReceiveSMSLog(ReceiveSMSDTO $DTO)
     {
+        if(!config('sms.logging.receive_logs.need_log')){
+            return;
+        }
         $store = $this->storage
             ->insert(
                 [
@@ -70,6 +76,9 @@ class StoreSMSDataRepository
 
     public function deliver(DeliverSMSDTO $DTO)
     {
+        if(!config('sms.logging.send_logs.need_log')){
+            return;
+        }
         if (!$this->storage->isMessageIdExist($DTO->messageId,$DTO->connectorName)) {
             throw new DeliverSMSException("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
