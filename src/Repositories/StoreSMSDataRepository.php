@@ -37,7 +37,7 @@ class StoreSMSDataRepository
                     'sender_number' => $DTO->senderNumber,
                     'to'            => $DTO->to,
                     'delivered_at'  => null,
-                    'sent_at'       => \Carbon::now(),
+                    'sent_at'       => Carbon::now(),
                     'connector'     => $DTO->connectorName,
                     'status'        => $DTO->status,
                     'type'          => 'send',
