@@ -26,7 +26,7 @@ abstract class AbstractDriver implements DriverInterface
     public function getConnectorName()
     {
         $getConnectorClassName = class_basename($this);
-        $removeConnectorFromClassName = str_replace('Connector','',$getConnectorClassName);
+        $removeConnectorFromClassName = str_replace('Driver','',$getConnectorClassName);
 
         return strtolower($removeConnectorFromClassName);
     }

@@ -50,13 +50,17 @@ php artisan vendor:publish
 
 
 ```
-Give the example
+return [
+     // debug , kavenegar, sms_ir, payamresan
+    'default_gateway' => env('SMS_GATEWAY', 'debug'),
+    ...
+]
 ```
 
-And repeat
+### نحوه ی استفاده
 
 ```
-until finished
+$sms = new
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
