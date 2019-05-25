@@ -25,7 +25,7 @@ class StoreSMSDataRepository
      */
     public function storeSendSMSLog(SentSMSOutputDTO $DTO)
     {
-        if(!config('sms.logging.send_logs.need_log')){
+        if (!config('sms.logging.send_logs.need_log')) {
             return;
         }
         $store = $this->storage
@@ -36,6 +36,7 @@ class StoreSMSDataRepository
                     'sender_number' => $DTO->senderNumber,
                     'to'            => $DTO->to,
                     'delivered_at'  => null,
+                    'sent_at'       => \Carbon::now(),
                     'connector'     => $DTO->connectorName,
                     'status'        => $DTO->status,
                     'type'          => 'send',
@@ -54,7 +55,7 @@ class StoreSMSDataRepository
      */
     public function storeReceiveSMSLog(ReceiveSMSDTO $DTO)
     {
-        if(!config('sms.logging.receive_logs.need_log')){
+        if (!config('sms.logging.receive_logs.need_log')) {
             return;
         }
         $store = $this->storage
@@ -76,13 +77,13 @@ class StoreSMSDataRepository
 
     public function deliver(DeliverSMSDTO $DTO)
     {
-        if(!config('sms.logging.send_logs.need_log')){
+        if (!config('sms.logging.send_logs.need_log')) {
             return;
         }
-        if (!$this->storage->isMessageIdExist($DTO->messageId,$DTO->connectorName)) {
+        if (!$this->storage->isMessageIdExist($DTO->messageId, $DTO->connectorName)) {
             throw new DeliverSMSException("Record( messageId: {$DTO->messageId} ) for delivering is not exist.");
         }
-        $this->storage->setDeliveryForLog($DTO->messageId,$DTO->connectorName,date('Y-m-d H:i:s'));
+        $this->storage->setDeliveryForLog($DTO->messageId, $DTO->connectorName, date('Y-m-d H:i:s'));
     }
 
 }
