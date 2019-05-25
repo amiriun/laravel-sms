@@ -23,7 +23,7 @@ class HookController extends Controller
         $DTO->sentAt = Carbon::now();
         $DTO->senderNumber = \Request::get('from');
         $DTO->to = \Request::get('to');
-        $DTO->messageId = \Request::get('messageid');
+        $DTO->messageId = (int)\Request::get('messageid');
         $DTO->message = \Request::get('message');
 
         $this->service->receive($DTO);
@@ -35,7 +35,7 @@ class HookController extends Controller
     public function deliverKavenegar(){
         $DTO = new DeliverSMSDTO();
         $DTO->connectorName = 'kavenegar';
-        $DTO->messageId = \Request::get('messageid');
+        $DTO->messageId = (int)\Request::get('messageid');
 
         $this->service->deliver($DTO);
 
