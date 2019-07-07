@@ -9,6 +9,8 @@ use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Exceptions\DeliverSMSException;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Notifications\Notification;
+
 
 class KavenegarDriver extends AbstractDriver
 {
@@ -29,8 +31,19 @@ class KavenegarDriver extends AbstractDriver
      */
     public function send(SendSMSDTO $DTO)
     {
-        $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
-        $getResponseDTO = $this->prepareResponseDTO($response);
+        if (config('sms.default_gateway') != 'kavenegar') {
+            throw new \Exception("Default SMS driver is kavenegar, but ".$DTO->senderNumber);
+        }
+        try{
+            $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
+            $getResponseDTO = $this->prepareResponseDTO($response);
+
+        }catch (\Exception $e){
+            event(new NotificationFailed($DTO, new Notification(), $this, [
+                'error' => $e->getMessage(),
+                'data' => serialize($DTO),
+            ]));
+        }
         $this->repository->storeSendSMSLog($getResponseDTO);
 
         return $getResponseDTO;
