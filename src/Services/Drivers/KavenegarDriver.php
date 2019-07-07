@@ -10,6 +10,7 @@ use Amiriun\SMS\Exceptions\DeliverSMSException;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Events\NotificationFailed;
 
 
 class KavenegarDriver extends AbstractDriver
