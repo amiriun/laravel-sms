@@ -9,7 +9,7 @@ Laravel SMS include **The popular Iranian SMS gateways** library providing an ea
 - [SMS.ir](http://sms.ir/)
 - [Payam Resan](http://payam-resan.com/)
 - [Melli Payamak](https://www.melipayamak.com/) (**soon**)
-- **Debug** ( Dont send sms to end users , just log it to laravel.log )
+- **Debug** ( Won't send sms to end users , just log it to laravel.log )
 
 ## Requirements
 
@@ -20,9 +20,7 @@ Laravel SMS include **The popular Iranian SMS gateways** library providing an ea
 
 - Laravel >=5.2
 
-```
-Give examples
-```
+
 
 ### Installing
 
@@ -57,13 +55,78 @@ return [
 ]
 ```
 
-### نحوه ی استفاده
+**Note:** If you choose "debug" driver as a default driver, your messages will not be sent and just logged in laravel.log file.
+
+### How to send SMS:
 
 ```
-$sms = new
+$data = new \Amiriun\SMS\DataContracts\SendSMSDTO();
+$data->setSenderNumber('300024444'); // also this can be set as default in config/sms.php
+$data->setMessage("Hello, this is a test");
+$data->setTo('09123000000');
+
+$getResponse = app('\Amiriun\SMS\Services\SMSService')->send($data);
+
+// expected output is instance of \Amiriun\SMS\DataContracts\SentSMSOutputDTO()
+//      $getResponse->messageId // get response of message id
+//      $getResponse->status // get response state of provider
+//      $getResponse->to // get recipient mobile number
+//      $getResponse->senderNumber // get provider sender number
+//      $getResponse->messageResult // get any other results from provider
+//      $getResponse->connectorName // get provider name, such as: Kavenegar, MelliPayamak, etc.
+
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+In the above example your message will be sent with the default provider(driver) which you choosed in config/sms.php file but
+#####you can change provider manually as you can see in the below example:
+
+```
+...
+...
+
+// $driver = app(\Amiriun\SMS\Services\Drivers\PayamResanDriver::class);
+// $driver = app(\Amiriun\SMS\Services\Drivers\SmsIrDriver::class);
+if(config('app.debug')){
+    $driver = app(\Amiriun\SMS\Services\Drivers\DebugDriver::class);
+}else{
+    $driver = app(\Amiriun\SMS\Services\Drivers\KavenegarDriver::class);
+}
+$getResponse = new \Amiriun\SMS\Services\SMSService($kavenegarDriver);
+$getResponse = $getResponse->send($data);
+
+...
+...
+
+```
+
+
+### How to receive SMS:
+
+This package obtain route uri which hooked by providers to update your application about received and delivered messages
+this routes are listed below:
+```
+YOUR_SITE.COM/amiriun-sms/kavenegar/receive
+YOUR_SITE.COM/amiriun-sms/kavenegar/deliver
+```
+You may define that urls with your own website domain in your providers (till now just kavenegar supported)
+
+When you received new message from provider or you have new delivery update, you may like to do some action, in these cases you can create two event with artisan command:
+```
+php artisan make:event SMSWasDelivered
+php artisan make:event SMSWasReceived
+```
+and after that you can define the class in you config/sms.php like this:
+```
+	...
+	
+    'events' => [
+        'after_receiving_sms' => \App\Events\SMSWasReceived::class,
+        'after_delivering_sms' => \App\Events\SMSWasDelivered::class,
+    ],
+    ...
+    
+```
+and you can define your actions when you getting new hooks from provider
 
 ## Extending
 

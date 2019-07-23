@@ -38,16 +38,15 @@ class KavenegarDriver extends AbstractDriver
         try{
             $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
             $getResponseDTO = $this->prepareResponseDTO($response);
+            $this->repository->storeSendSMSLog($getResponseDTO);
 
+            return $getResponseDTO;
         }catch (\Exception $e){
             event(new NotificationFailed($DTO, new Notification(), $this, [
                 'error' => $e->getMessage(),
                 'data' => serialize($DTO),
             ]));
         }
-        $this->repository->storeSendSMSLog($getResponseDTO);
-
-        return $getResponseDTO;
     }
 
     /**
