@@ -47,7 +47,7 @@ php artisan vendor:publish
 (Now you can specify your sms gateways identifiers and **select default gateway** from config/sms.php file) 
 
 
-```
+```php
 return [
      // debug , kavenegar, sms_ir, payamresan
     'default_gateway' => env('SMS_GATEWAY', 'debug'),
@@ -59,7 +59,7 @@ return [
 
 ### How to send SMS:
 
-```
+```php
 $data = new \Amiriun\SMS\DataContracts\SendSMSDTO();
 $data->setSenderNumber('300024444'); // also this can be set as default in config/sms.php
 $data->setMessage("Hello, this is a test");
@@ -80,7 +80,7 @@ $getResponse = app('\Amiriun\SMS\Services\SMSService')->send($data);
 In the above example your message will be sent with the default provider(driver) which you choosed in config/sms.php file but
 #####you can change provider manually as you can see in the below example:
 
-```
+```php
 ...
 ...
 
@@ -111,12 +111,12 @@ YOUR_SITE.COM/amiriun-sms/kavenegar/deliver
 You may define that urls with your own website domain in your providers (till now just kavenegar supported)
 
 When you received new message from provider or you have new delivery update, you may like to do some action, in these cases you can create two event with artisan command:
-```
+```bash
 php artisan make:event SMSWasDelivered
 php artisan make:event SMSWasReceived
 ```
 and after that you can define the class in you config/sms.php like this:
-```
+```php
 	...
 	
     'events' => [
