@@ -4,6 +4,7 @@ namespace Amiriun\SMS\Services\Drivers;
 
 
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
+use Amiriun\SMS\DataContracts\SendInstantDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Exceptions\DeliverSMSException;
@@ -37,6 +38,32 @@ class KavenegarDriver extends AbstractDriver
         }
         try{
             $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
+            $getResponseDTO = $this->prepareResponseDTO($response);
+            $this->repository->storeSendSMSLog($getResponseDTO);
+
+            return $getResponseDTO;
+        }catch (\Exception $e){
+            event(new NotificationFailed($DTO, new Notification(), $this, [
+                'error' => $e->getMessage(),
+                'data' => serialize($DTO),
+            ]));
+        }
+    }
+
+    /**
+     * @param SendInstantDTO $DTO
+     *
+     * @return SentSMSOutputDTO
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendInstant(SendInstantDTO $DTO)
+    {
+        if (config('sms.default_gateway') != 'kavenegar') {
+            throw new \Exception("Default SMS driver is kavenegar, but ".$DTO->senderNumber);
+        }
+        try{
+            $response = $this->prepareInstantRequest($DTO, config('sms.kavenegar.api_key'));
             $getResponseDTO = $this->prepareResponseDTO($response);
             $this->repository->storeSendSMSLog($getResponseDTO);
 
@@ -155,6 +182,31 @@ class KavenegarDriver extends AbstractDriver
                     'receptor' => $DTO->to,
                     'message'  => $DTO->message,
                     'sender'   => $this->getSenderNumber($DTO->senderNumber)
+                ],
+                'headers'     => [
+                    'Content-Type' => 'application/x-www-form-urlencoded'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * @param SendInstantDTO $DTO
+     * @param            $apiKey
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function prepareInstantRequest(SendInstantDTO $DTO, $apiKey)
+    {
+        return $this->client->request(
+            'POST',
+            "https://api.kavenegar.com/v1/$apiKey/verify/lookup.json",
+            [
+                'form_params' => [
+                    'receptor' => $DTO->to,
+                    'token'  => $DTO->message,
+                    'template' => $DTO->template,
                 ],
                 'headers'     => [
                     'Content-Type' => 'application/x-www-form-urlencoded'

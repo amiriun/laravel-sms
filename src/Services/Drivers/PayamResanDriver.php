@@ -6,6 +6,7 @@ namespace Amiriun\SMS\Services\Drivers;
 use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
+use Amiriun\SMS\DataContracts\SendInstantDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
@@ -35,6 +36,18 @@ class PayamResanDriver extends AbstractDriver
         $this->repository->storeSendSMSLog($getResponseDTO);
 
         return $getResponseDTO;
+    }
+
+    /**
+     * @param SendInstantDTO $DTO
+     *
+     * @return SentSMSOutputDTO
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendInstant(SendInstantDTO $DTO)
+    {
+        // TODO: Implement sendInstant() method.
     }
 
     public function deliver(DeliverSMSDTO $DTO)
