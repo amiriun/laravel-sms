@@ -38,7 +38,7 @@ class SMSService
      */
     public function sendInstant(SendInstantDTO $DTO)
     {
-        return $this->connector->send($DTO);
+        return $this->connector->sendInstant($DTO);
     }
 
     /**
