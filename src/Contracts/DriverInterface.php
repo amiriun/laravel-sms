@@ -4,7 +4,6 @@ namespace Amiriun\SMS\Contracts;
 
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
-use Amiriun\SMS\DataContracts\SendInstantDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 
@@ -24,13 +23,13 @@ interface DriverInterface
     public function send(SendSMSDTO $DTO);
 
     /**
-     * @param SendInstantDTO $DTO
+     * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendInstant(SendInstantDTO $DTO);
+    public function sendInstant(SendSMSDTO $DTO);
 
     /**
      * @param ReceiveSMSDTO $DTO

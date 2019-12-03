@@ -4,7 +4,6 @@ namespace Amiriun\SMS\Services\Drivers;
 
 
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
-use Amiriun\SMS\DataContracts\SendInstantDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Exceptions\DeliverSMSException;
@@ -51,13 +50,13 @@ class KavenegarDriver extends AbstractDriver
     }
 
     /**
-     * @param SendInstantDTO $DTO
+     * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendInstant(SendInstantDTO $DTO)
+    public function sendInstant(SendSMSDTO $DTO)
     {
         if (config('sms.default_gateway') != 'kavenegar') {
             throw new \Exception("Default SMS driver is kavenegar, but ".$DTO->senderNumber);
@@ -191,13 +190,13 @@ class KavenegarDriver extends AbstractDriver
     }
 
     /**
-     * @param SendInstantDTO $DTO
+     * @param SendSMSDTO $DTO
      * @param            $apiKey
      *
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function prepareInstantRequest(SendInstantDTO $DTO, $apiKey)
+    private function prepareInstantRequest(SendSMSDTO $DTO, $apiKey)
     {
         return $this->client->request(
             'POST',

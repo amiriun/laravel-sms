@@ -3,10 +3,7 @@
 namespace Amiriun\SMS\Services\Drivers;
 
 
-use Amiriun\SMS\Contracts\DriverInterface;
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
-use Amiriun\SMS\DataContracts\ReceiveSMSDTO;
-use Amiriun\SMS\DataContracts\SendInstantDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
 use Amiriun\SMS\Repositories\StoreSMSDataRepository;
@@ -39,13 +36,13 @@ class SmsIrDriver extends AbstractDriver
     }
 
     /**
-     * @param SendInstantDTO $DTO
+     * @param SendSMSDTO $DTO
      *
      * @return SentSMSOutputDTO
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendInstant(SendInstantDTO $DTO)
+    public function sendInstant(SendSMSDTO $DTO)
     {
         // TODO: Implement sendInstant() method.
     }
