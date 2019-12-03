@@ -8,6 +8,7 @@ class SendSMSDTO
     public $to;
     public $senderNumber;
     public $message;
+    public $template;
 
     public function setTo($value)
     {
