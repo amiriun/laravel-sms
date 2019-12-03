@@ -1,4 +1,4 @@
-# Iranian Laravel SMS Gateways ( integrate with laravel notification )
+# Iranian Laravel SMS Gateways ( integrated with laravel notification )
 
 
 Laravel SMS include **The popular Iranian SMS gateways** library providing an easier way to send sms from any gateway you want or switch between them.
