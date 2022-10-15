@@ -43,4 +43,29 @@ class HookController extends Controller
         event(new $eventInstanceName($DTO));
     }
 
+    public function receiveMediana(){
+        $DTO = new ReceiveSMSDTO();
+        $DTO->connectorName = 'mediana';
+        $DTO->sentAt = Carbon::now();
+        $DTO->senderNumber = preg_replace("/^98/", "0", \Request::get('from'));
+        $DTO->to = preg_replace("/^98/", "0", \Request::get('to'));
+        $DTO->message = \Request::get('message');
+
+        $this->service->receive($DTO);
+
+        $eventInstanceName = config('sms.events.after_receiving_sms');
+        event(new $eventInstanceName($DTO));
+    }
+
+    public function deliverMediana(){
+        $DTO = new DeliverSMSDTO();
+        $DTO->connectorName = 'kavenegar';
+        $DTO->messageId = (int)\Request::get('messageid');
+
+        $this->service->deliver($DTO);
+
+        $eventInstanceName = config('sms.events.after_delivering_sms');
+        event(new $eventInstanceName($DTO));
+    }
+
 }
