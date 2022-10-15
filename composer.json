@@ -17,7 +17,8 @@
         }
     ],
     "require": {
-        "php": ">=7.3"
+        "php": ">=7.3",
+        "ippanel/php-rest-sdk": "^1.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3"
