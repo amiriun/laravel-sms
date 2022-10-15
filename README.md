@@ -8,6 +8,7 @@ Laravel SMS include **The popular Iranian SMS gateways** library providing an ea
 - [Kavenegar](http://kavenegar.com/)
 - [SMS.ir](http://sms.ir/)
 - [Payam Resan](http://payam-resan.com/)
+- [Mediana](http://ippanel.com/)
 - [Melli Payamak](https://www.melipayamak.com/) (**soon**)
 - **Debug** ( Won't send sms to end users , just log it to laravel.log )
 
