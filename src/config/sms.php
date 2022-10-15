@@ -30,6 +30,12 @@ return [
             'YOUR_NUMBERS',
         ],
     ],
+    'mediana'    => [
+        'api_key' => env('MEDIANA_API_KEY', 'YOUR_API_KEY'),
+        'numbers' => [
+            'YOUR_NUMBERS',
+        ],
+    ],
     'mellipayamak' => [
         'api_key' => env('MELLIPAYAMAK_API_KEY', 'YOUR_API_KEY'),
         'numbers' => [
