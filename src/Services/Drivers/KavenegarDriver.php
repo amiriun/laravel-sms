@@ -157,9 +157,9 @@ class KavenegarDriver extends AbstractDriver
      */
     private function getSenderNumber($senderNumber)
     {
-        if (is_null($senderNumber)) {
+        /* if (is_null($senderNumber)) {
             return config('sms.kavenegar.numbers.0');
-        }
+        } */
 
         return $senderNumber;
     }
