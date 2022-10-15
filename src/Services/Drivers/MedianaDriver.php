@@ -11,9 +11,9 @@ use Amiriun\SMS\Repositories\StoreSMSDataRepository;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Events\NotificationFailed;
+use IPPanel\Client;
 
-
-class KavenegarDriver extends AbstractDriver
+class MedianaDriver extends AbstractDriver
 {
     private $client;
 
@@ -32,16 +32,19 @@ class KavenegarDriver extends AbstractDriver
      */
     public function send(SendSMSDTO $DTO)
     {
-        if (config('sms.default_gateway') != 'kavenegar') {
-            throw new \Exception("Default SMS driver is kavenegar, but ".$DTO->senderNumber);
+        if (config('sms.default_gateway') != 'mediana') {
+            throw new \Exception("Default SMS driver is mediana, but " . $DTO->senderNumber);
         }
-        try{
-            $response = $this->prepareSendRequest($DTO, config('sms.kavenegar.api_key'));
-            $getResponseDTO = $this->prepareResponseDTO($response);
-            $this->repository->storeSendSMSLog($getResponseDTO);
-
-            return $getResponseDTO;
-        }catch (\Exception $e){
+        try {
+            $client = new Client(config("sms.mediana.api_key"));
+            $bulkId = $client->send(
+                $DTO->senderNumber,
+                [$DTO->to],
+                $DTO->message
+            );
+            $result = $client->getMessage($bulkId);
+            $this->prepareResponseDTO($result, $DTO);
+        } catch (\Exception $e) {
             event(new NotificationFailed($DTO, new Notification(), $this, [
                 'error' => $e->getMessage(),
                 'data' => serialize($DTO),
@@ -58,16 +61,20 @@ class KavenegarDriver extends AbstractDriver
      */
     public function sendInstant(SendSMSDTO $DTO)
     {
-        if (config('sms.default_gateway') != 'kavenegar') {
-            throw new \Exception("Default SMS driver is kavenegar, but ".$DTO->senderNumber);
+        if (config('sms.default_gateway') != 'mediana') {
+            throw new \Exception("Default SMS driver is mediana, but " . $DTO->senderNumber);
         }
-        try{
-            $response = $this->prepareInstantRequest($DTO, config('sms.kavenegar.api_key'));
-            $getResponseDTO = $this->prepareResponseDTO($response);
-            $this->repository->storeSendSMSLog($getResponseDTO);
-
-            return $getResponseDTO;
-        }catch (\Exception $e){
+        try {
+            $client = new Client(config("sms.mediana.api_key"));
+            $bulkId = $client->sendPattern(
+                $DTO->template,
+                $DTO->senderNumber,
+                [$DTO->to],
+                $DTO->message
+            );
+            $result = $client->getMessage($bulkId);
+            $this->prepareResponseDTO($result, $DTO);
+        } catch (\Exception $e) {
             event(new NotificationFailed($DTO, new Notification(), $this, [
                 'error' => $e->getMessage(),
                 'data' => serialize($DTO),
@@ -135,82 +142,16 @@ class KavenegarDriver extends AbstractDriver
      *
      * @return SentSMSOutputDTO
      */
-    private function prepareResponseDTO($res)
+    private function prepareResponseDTO($res, SendSMSDTO $DTO)
     {
-        $responseArray = json_decode((string)$res->getBody());
         $outputDTO = new SentSMSOutputDTO();
-        $outputDTO->status = $this->getSystemStatus($responseArray->entries[0]->status);
-        $outputDTO->messageResult = $responseArray->entries[0]->message;
-        $outputDTO->messageId = $responseArray->entries[0]->messageid;
-        $outputDTO->senderNumber = $responseArray->entries[0]->sender;
-        $outputDTO->to = $responseArray->entries[0]->receptor;
+        $outputDTO->status = $res->status;
+        $outputDTO->messageResult = $res->message;
+        $outputDTO->messageId = $res->bulkId;
+        $outputDTO->senderNumber = $DTO->senderNumber;
+        $outputDTO->to = $DTO->to;
         $outputDTO->connectorName = $this->getConnectorName();
 
         return $outputDTO;
-
-    }
-
-    /**
-     * @param SendSMSDTO $DTO
-     *
-     * @return mixed
-     */
-    private function getSenderNumber($senderNumber)
-    {
-        /* if (is_null($senderNumber)) {
-            return config('sms.kavenegar.numbers.0');
-        } */
-
-        return $senderNumber;
-    }
-
-    /**
-     * @param SendSMSDTO $DTO
-     * @param            $apiKey
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function prepareSendRequest(SendSMSDTO $DTO, $apiKey)
-    {
-        return $this->client->request(
-            'POST',
-            "https://api.kavenegar.com/v1/$apiKey/sms/send.json",
-            [
-                'form_params' => [
-                    'receptor' => $DTO->to,
-                    'message'  => $DTO->message,
-                    'sender'   => $this->getSenderNumber($DTO->senderNumber)
-                ],
-                'headers'     => [
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ]
-            ]
-        );
-    }
-
-    /**
-     * @param SendSMSDTO $DTO
-     * @param            $apiKey
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function prepareInstantRequest(SendSMSDTO $DTO, $apiKey)
-    {
-        return $this->client->request(
-            'POST',
-            "https://api.kavenegar.com/v1/$apiKey/verify/lookup.json",
-            [
-                'form_params' => [
-                    'receptor' => $DTO->to,
-                    'token'  => $DTO->message,
-                    'template' => $DTO->template,
-                ],
-                'headers'     => [
-                    'Content-Type' => 'application/x-www-form-urlencoded'
-                ]
-            ]
-        );
     }
 }
