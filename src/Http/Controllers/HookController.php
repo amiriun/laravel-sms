@@ -48,7 +48,7 @@ class HookController extends Controller
         $DTO->connectorName = 'mediana';
         $DTO->sentAt = Carbon::now();
         $DTO->senderNumber = preg_replace("/^98/", "0", \Request::get('from'));
-        $DTO->to = preg_replace("/^98/", "0", \Request::get('to'));
+        $DTO->to = preg_replace("/^98/", "", \Request::get('to'));
         $DTO->message = \Request::get('message');
 
         $this->service->receive($DTO);
