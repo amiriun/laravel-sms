@@ -39,9 +39,9 @@ class SMSServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if(!config('sms')){
-            config(['sms'=> require __DIR__.'/config/sms.php']);
-        }
+        $this->mergeConfigFrom(
+            __DIR__.'/config/sms.php', 'sms'
+        );
         $this->app->bind(ClientInterface::class,Client::class);
         $this->app->bind(StorageInterface::class,config('sms.logging.storage'));
         $this->app->bind(DriverInterface::class,$this->getConnectorInstance());
