@@ -59,7 +59,7 @@ class HookController extends Controller
 
     public function deliverMediana(){
         $DTO = new DeliverSMSDTO();
-        $DTO->connectorName = 'kavenegar';
+        $DTO->connectorName = 'mediana';
         $DTO->messageId = (int)\Request::get('messageid');
 
         $this->service->deliver($DTO);
