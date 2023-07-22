@@ -2,7 +2,6 @@
 
 namespace Amiriun\SMS\Services\Drivers;
 
-
 use Amiriun\SMS\DataContracts\DeliverSMSDTO;
 use Amiriun\SMS\DataContracts\SendSMSDTO;
 use Amiriun\SMS\DataContracts\SentSMSOutputDTO;
@@ -43,7 +42,7 @@ class MedianaDriver extends AbstractDriver
                 $DTO->message
             );
             $result = $client->getMessage($bulkId);
-            $this->prepareResponseDTO($result, $DTO);
+            return $this->prepareResponseDTO($result, $DTO);
         } catch (\Exception $e) {
             event(new NotificationFailed($DTO, new Notification(), $this, [
                 'error' => $e->getMessage(),
@@ -69,12 +68,13 @@ class MedianaDriver extends AbstractDriver
             $bulkId = $client->sendPattern(
                 $DTO->template,
                 $DTO->senderNumber,
-                [$DTO->to],
+                $DTO->to,
                 $DTO->message
             );
             $result = $client->getMessage($bulkId);
-            $this->prepareResponseDTO($result, $DTO);
+            return $this->prepareResponseDTO($result, $DTO);
         } catch (\Exception $e) {
+            report($e);
             event(new NotificationFailed($DTO, new Notification(), $this, [
                 'error' => $e->getMessage(),
                 'data' => serialize($DTO),
